@@ -24,6 +24,7 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
+          <a href="{{ route('test.index') }}">test</a>
     <div class="container">
         <div class="card">
             <div class="card-header bg-primary text-white">

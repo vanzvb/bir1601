@@ -34,4 +34,10 @@ class ReportController extends Controller
         // Pass the parameters to the view
         return view('reports.bir1601plus', compact('month', 'year','users', 'bir1601s'));
     }
+
+    public function test()
+    {
+        $bir1601s = bir1601::all();
+        return view('test.index', compact('bir1601s'));
+    }
 }
