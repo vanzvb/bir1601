@@ -107,6 +107,7 @@
                                                     <tr>
                                                         <th class="text-white bg-primary text-center fw-bold">Employee ID</th>
                                                         <th class="text-white bg-primary text-center fw-bold">Employee Name</th>
+                                                        <th class="text-white bg-primary text-center fw-bold">Email</th>
                                                         <th class="text-white bg-primary text-center fw-bold">Cutoff</th>
                                                         <th class="text-white bg-primary text-center fw-bold">Basic Pay</th>
                                                         <th class="text-white bg-primary text-center fw-bold">Total Premium</th>
@@ -151,6 +152,7 @@
                                                         {{ $bir1601->empID }}
                                                     </td>
                                                     <td>{{ $bir1601->user->name }}</td>
+                                                    <td>{{ $bir1601->user->email }}</td>
                                                     <td>
                                                         @if($bir1601->cutoff == 1)
                                                         1-15
