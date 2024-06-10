@@ -26,3 +26,9 @@ Route::get('/reports/bir1601', [App\Http\Controllers\ReportController::class, 's
 Route::get('/reports/bir1601plus', [App\Http\Controllers\ReportController::class, 'showReportPlus'])->name('reports.bir1601plus');
 
 Route::get('/test/index', [App\Http\Controllers\ReportController::class, 'test'])->name('test.index');
+
+// Payroll Cutoff
+Route::get('/payroll-cuttof-summary', [App\Http\Controllers\PayrollCuttoffSummaryController::class, 'index'])->name('payroll_cutoff_summary.payroll_cutoff_summary');
+Route::post('/save/payroll', [App\Http\Controllers\PayrollCuttoffSummaryController::class, 'save'])->name('save.payroll');
+
+// generate1601
