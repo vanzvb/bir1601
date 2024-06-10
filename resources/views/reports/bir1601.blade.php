@@ -40,6 +40,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div>
+                            {{-- <div>BOU : {{ $bouID }}</div> --}}
                         </div>
                         <div class="row">
                             <div class="col-md-12 mt-3">
@@ -54,8 +55,8 @@
                                                     <th>Basic Pay</th>
                                                     <th>Total Premium</th>
                                                     <th>Total DMM</th>
-                                                    <th>Total E</th>
-                                                    <th>Total D</th>
+                                                    <th>Total Project Exp</th>
+                                                    <th>Total Deduction</th>
                                                     <th>Total Gross Pay Salary</th>
                                                     <th>Tax</th>
                                                 </tr>
@@ -74,11 +75,41 @@
                                                     <td>{{ $bir1601->total_gross_pay_salary }}</td>
                                                     <td>{{ $bir1601->tax }}</td>
                                                 </tr>
+                                                
                                                 @endforeach
                                             </tbody>
                                         </table>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+
+                        <!-- Card for totals and averages -->
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Summary</h5>
+                                <p class="card-text">
+                                    <table>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total Basic Pay : </strong></td>
+                                            <td> {{ number_format($total_basic, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total Premium : </strong></td>
+                                            <td> {{ number_format($total_premium, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total Project Expense : </strong></td>
+                                            <td> {{ number_format($total_expense, 2) }}</td>
+                                        </tr>
+                                        {{-- ₱ --}}
+                                    </table>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -154,11 +185,11 @@
                         <td>${rowData[5]}</td>
                     </tr>
                     <tr>
-                        <td>Total E:</td>
+                        <td>Total Project Expense:</td>
                         <td>${rowData[6]}</td>
                     </tr>
                     <tr>
-                        <td>Total D:</td>
+                        <td>Total Deduction:</td>
                         <td>${rowData[7]}</td>
                     </tr>
                     <tr>

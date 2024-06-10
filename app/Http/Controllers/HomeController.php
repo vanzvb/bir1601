@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\bir1601;
+use App\Models\CompanyBou;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -30,6 +31,8 @@ class HomeController extends Controller
 
         $bir1601s = bir1601::all();
 
-        return view('home', compact('users', 'bir1601s'));
+        $company_bous = CompanyBou::all();
+
+        return view('home', compact('users', 'bir1601s', 'company_bous'));
     }
 }

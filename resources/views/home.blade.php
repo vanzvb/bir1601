@@ -50,10 +50,11 @@
                                 </thead>
                                 <tbody>
                                     <form action="{{ route('reports.bir1601') }}" method="GET">
+                                        
                                         <tr>
                                             <td>BIR 1601</td>
                                             <td>
-                                                <select id="month" name="month" class="form-control select2" required>
+                                                <select id="month" name="month" class="form-select select2" required>
                                                     <option value="">Select Month</option>
                                                     @for ($m = 1; $m <= 12; $m++)
                                                         <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
@@ -61,16 +62,29 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <select id="year" name="year" class="form-control select2" required>
+                                                <select id="year" name="year" class="form-select select2" required>
                                                     <option value="">Select Year</option>
-                                                    @for ($y = date('Y'); $y >= 2000; $y--)
+                                                    {{-- @for ($y = date('Y'); $y >= 2000; $y--)
                                                         <option value="{{ $y }}">{{ $y }}</option>
+                                                    @endfor --}}
+                                                    @for ($y = 2029; $y >= 2019; $y--)
+                                                    <option value="{{ $y }}">{{ $y }}</option>
                                                     @endfor
-                                                </select>
+                                                </select>   
                                             </td>
-                                            <td>Sample BOU</td>
+                                            <td>
+
+                                                {{-- <label for="bou">Choose a BOU:</label> --}}
+                                                <select name="bouID" id="bouID" class="form-select select2">
+                                                    <option value="">Select BOU</option>
+                                                    @foreach($company_bous as $company_bou)
+                                                        <option value="{{ $company_bou->id }}">{{ $company_bou->bouName }}</option>
+                                                    @endforeach
+                                                </select>
+
+                                            </td>
                                             <td class="text-center">
-                                                <button type="submit" class="btn btn-primary">
+                                                <button type="submit" class="btn btn-success">
                                                     <i class="fas fa-file-alt"></i> Generate Report
                                                 </button>
                                             </td>
@@ -81,7 +95,7 @@
                                         <tr>
                                             <td>BIR 1601 ++</td>
                                             <td>
-                                                <select id="month" name="month" class="form-control select2" required>
+                                                <select id="monthplus" name="month" class="form-select select2" required>
                                                     <option value="">Select Month</option>
                                                     @for ($m = 1; $m <= 12; $m++)
                                                         <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
@@ -89,19 +103,28 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <select id="year" name="year" class="form-control select2" required>
+                                                <select id="yearplus" name="year" class="form-select select2" required>
                                                     <option value="">Select Year</option>
                                                     {{-- @for ($y = date('Y'); $y >= 2019; $y--)
                                                         <option value="{{ $y }}">{{ $y }}</option>
                                                     @endfor --}}
                                                     @for ($y = 2029; $y >= 2019; $y--)
                                                     <option value="{{ $y }}">{{ $y }}</option>
-                                                @endfor
+                                                    @endfor
                                                 </select>
                                             </td>
-                                            <td>Sample BOU</td>
+                                            <td>
+
+                                                <select name="bouID" id="BOU" class="form-select select2" >
+                                                    <option value="">Select BOU</option>
+                                                    @foreach($company_bous as $company_bou)
+                                                        <option value="{{ $company_bou->id }}">{{ $company_bou->bouName }}</option>
+                                                    @endforeach
+                                                </select>
+
+                                            </td>
                                             <td class="text-center">
-                                                <button type="submit" class="btn btn-primary">
+                                                <button type="submit" class="btn btn-success">
                                                     <i class="fas fa-file-alt"></i> Generate Report
                                                 </button>
                                             </td>
@@ -116,8 +139,7 @@
         </div>
     </div>
 
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- jQuery 3.7.1 JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
@@ -132,10 +154,14 @@
     <!-- Font Awesome 6.5 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u3fPA7V8qQmhBPNT5quvaXVa1mnnLSXUep5PS1qo5NRzHwG19aHmNJnj1Q8hpA/nBWZtZD4r4AX6YOt5ynLN2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+        <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script>
         $(document).ready(function() {
             $('.select2').select2({
-                theme: 'bootstrap-5'
+                theme: 'bootstrap-5',
+                width: '100%'
             });
         });
     </script>
