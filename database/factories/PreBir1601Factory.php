@@ -2,34 +2,20 @@
 
 namespace Database\Factories;
 
-use App\Models\pre_bir_1601;
+use App\Models\PreBir1601;
 use App\Models\User;
 use App\Models\CompanyBou;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\pre_bir_1601>
- */
 class PreBir1601Factory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = pre_bir_1601::class;
+    protected $model = PreBir1601::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition()
     {
         $userId = User::inRandomOrder()->first()->id;
         $bouId = CompanyBou::inRandomOrder()->first()->id;
 
-        // Define realistic numeric samples
         $basicPayFirst = $this->faker->numberBetween(15000, 30000);
         $basicPaySecond = $this->faker->numberBetween(15000, 30000);
         $basicPayTotal = $basicPayFirst + $basicPaySecond;

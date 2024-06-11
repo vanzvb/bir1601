@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class pre_bir_1601 extends Model
+class PreBir1601 extends Model
 {
     use HasFactory;
 
@@ -29,5 +29,10 @@ class pre_bir_1601 extends Model
 
         return $this->belongsTo(User::class, 'empID', 'id');
 
+    }
+
+    public function companyBou()
+    {
+        return $this->belongsTo(CompanyBou::class, 'bouID', 'id');
     }
 }

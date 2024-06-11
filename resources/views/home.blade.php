@@ -37,7 +37,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <form action="{{ route('reports.bir1601') }}" method="GET">
+                    {{-- <form action="{{ route('reports.bir1601') }}" method="GET"> --}}
                         <div class="table-responsive">
                             <table class="table table-bordered w-100">
                                 <thead>
@@ -50,8 +50,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <form action="{{ route('reports.bir1601') }}" method="GET">
-                                        
+                                    {{-- <form action="{{ route('reports.bir1601') }}" method="GET"> --}}
+                                    <form action="{{ route('test.encryptedbir') }}" method="GET">
                                         <tr>
                                             <td>BIR 1601</td>
                                             <td>
@@ -76,7 +76,7 @@
                                             <td>
 
                                                 {{-- <label for="bou">Choose a BOU:</label> --}}
-                                                <select name="bouID" id="bouID" class="form-select select2">
+                                                <select name="bouID" id="bouID" class="form-select select2" required>
                                                     <option value="">Select BOU</option>
                                                     @foreach($company_bous as $company_bou)
                                                         <option value="{{ $company_bou->id }}">{{ $company_bou->bouName }}</option>

@@ -39,7 +39,7 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                            {{-- <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div> --}}
+                            <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div>
                             {{-- <div>BOU : {{ $bouID }}</div> --}}
                         </div>
                         <div class="row">
@@ -50,14 +50,30 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
+                                                    <th>TIN</th>
                                                     <th>Employee ID</th>
                                                     <th>Employee Name</th>
-                                                    <th>Basic Pay</th>
+                                                    <th>BOU</th>
+                                                    <th>Basic Pay(1-15)</th>
+                                                    <th>Basic Pay(16-31)</th>
+                                                    <th>Tot Basic Pay</th>
+                                                    <th>Premium(1-15)</th>
+                                                    <th>Premium(16-31)</th>
                                                     <th>Total Premium</th>
-                                                    <th>Total DMM</th>
-                                                    <th>Total Project Exp</th>
-                                                    <th>Total Deduction</th>
-                                                    <th>Total Gross Pay Salary</th>
+                                                    <th>DMM(1-15)</th>
+                                                    <th>DMM(16-31)</th>
+                                                    <th>Tot DMM</th>
+                                                    <th>Proj Exp(1-15)</th>
+                                                    <th>Proj Exp(16-31)</th>
+                                                    <th>Tot Proj Exp</th>
+                                                    <th>Deduction(1-15)</th>
+                                                    <th>Deduction(16-31)</th>
+                                                    <th>Tot Deduction</th>
+                                                    <th>Gross Pay(1-15)</th>
+                                                    <th>Gross Pay(16-31)</th>
+                                                    <th>Tot Gross Pay</th>
+                                                    <th>Tax(1-15)</th>
+                                                    <th>Tax(16-31)</th>
                                                     <th>Tax</th>
                                                 </tr>
                                             </thead>
@@ -65,15 +81,31 @@
                                                 @foreach($pre_bir_1601s as $pre_bir_1601)
                                                 <tr>
                                                     <td><button type="button" class="toggle-details"><i class="fa fa-caret-down"></i></button></td>
+                                                    <td>{{ $pre_bir_1601->tin }}</td>
                                                     <td>{{ $pre_bir_1601->empID }}</td>
                                                     <td>{{ $pre_bir_1601->user->name }}</td>
-                                                    <td>{{ $pre_bir_1601->basic_pay }}</td>
-                                                    <td>{{ $pre_bir_1601->total_premium }}</td>
-                                                    <td>{{ $pre_bir_1601->total_dmm }}</td>
-                                                    <td>{{ $pre_bir_1601->total_e }}</td>
-                                                    <td>{{ $pre_bir_1601->total_d }}</td>
-                                                    <td>{{ $pre_bir_1601->total_gross_pay_salary }}</td>
-                                                    <td>{{ $pre_bir_1601->tax }}</td>
+                                                    <td>{{ $pre_bir_1601->companyBou->bouName }}</td>
+                                                    <td>{{ $pre_bir_1601->basic_pay_first }}</td>
+                                                    <td>{{ $pre_bir_1601->basic_pay_second }}</td>
+                                                    <td>{{ $pre_bir_1601->basic_pay_total }}</td>
+                                                    <td>{{ $pre_bir_1601->premium_first }}</td>
+                                                    <td>{{ $pre_bir_1601->premium_second }}</td>
+                                                    <td>{{ $pre_bir_1601->tot_premium }}</td>
+                                                    <td>{{ $pre_bir_1601->dmm_first }}</td>
+                                                    <td>{{ $pre_bir_1601->dmm_second }}</td>
+                                                    <td>{{ $pre_bir_1601->tot_dmm }}</td>
+                                                    <td>{{ $pre_bir_1601->proj_exp_first }}</td>
+                                                    <td>{{ $pre_bir_1601->proj_exp_second }}</td>
+                                                    <td>{{ $pre_bir_1601->tot_proj_exp }}</td>
+                                                    <td>{{ $pre_bir_1601->deduction_first }}</td>
+                                                    <td>{{ $pre_bir_1601->deduction_second }}</td>
+                                                    <td>{{ $pre_bir_1601->tot_deduction }}</td>
+                                                    <td>{{ $pre_bir_1601->gross_pay_first }}</td>
+                                                    <td>{{ $pre_bir_1601->gross_pay_second }}</td>
+                                                    <td>{{ $pre_bir_1601->tot_gross_pay_salary }}</td>
+                                                    <td>{{ $pre_bir_1601->tax_first }}</td>
+                                                    <td>{{ $pre_bir_1601->tax_second }}</td>
+                                                    <td>{{ $pre_bir_1601->tot_tax }}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -161,7 +193,7 @@
         var table = $('#manageBIR').DataTable({
             "columnDefs": [
                 {
-                    "targets": [3, 4, 5, 6, 7, 8, 9], // Columns 4 to 10
+                    "targets": [5, 6, 7, 8, 9, 10, 11, 12, 13 , 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], // Columns 4 to 10
                     "visible": false // Hide these columns by default
                 }
             ]
@@ -172,32 +204,88 @@
             return `
                 <table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">
                     <tr>
-                        <td>Basic Pay:</td>
-                        <td>${rowData[3]}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Premium:</td>
-                        <td>${rowData[4]}</td>
-                    </tr>
-                    <tr>
-                        <td>Total DMM:</td>
+                        <td>Basic Pay(1-15):</td>
                         <td>${rowData[5]}</td>
                     </tr>
                     <tr>
-                        <td>Total Project Expense:</td>
+                        <td>Basic Pay(16-31):</td>
                         <td>${rowData[6]}</td>
                     </tr>
                     <tr>
-                        <td>Total Deduction:</td>
+                        <td>Tot Basic Pay:</td>
                         <td>${rowData[7]}</td>
                     </tr>
                     <tr>
-                        <td>Total Gross Pay Salary:</td>
+                        <td>Premium(1-15):</td>
                         <td>${rowData[8]}</td>
                     </tr>
                     <tr>
-                        <td>Tax:</td>
+                        <td>Premium(16-31):</td>
                         <td>${rowData[9]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tot Premium:</td>
+                        <td>${rowData[10]}</td>
+                    </tr>
+                    <tr>
+                        <td>DMM(1-15):</td>
+                        <td>${rowData[11]}</td>
+                    </tr>
+                    <tr>
+                        <td>DMM(16-31):</td>
+                        <td>${rowData[12]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tot DMM:</td>
+                        <td>${rowData[13]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tot Proj Exp(1-15):</td>
+                        <td>${rowData[14]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tot Proj Exp(16-31):</td>
+                        <td>${rowData[15]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tot Proj Exp:</td>
+                        <td>${rowData[16]}</td>
+                    </tr>
+                    <tr>
+                        <td>Deduction(1-15):</td>
+                        <td>${rowData[17]}</td>
+                    </tr>
+                    <tr>
+                        <td>Deduction(16-31):</td>
+                        <td>${rowData[18]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tot Deduction:</td>
+                        <td>${rowData[19]}</td>
+                    </tr>
+                    <tr>
+                        <td>Gross Pay(1-15):</td>
+                        <td>${rowData[20]}</td>
+                    </tr>
+                    <tr>
+                        <td>Gross Pay(16-31):</td>
+                        <td>${rowData[21]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tot Gross Pay:</td>
+                        <td>${rowData[22]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tax(1-15):</td>
+                        <td>${rowData[23]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tax(16-31):</td>
+                        <td>${rowData[24]}</td>
+                    </tr>
+                    <tr>
+                        <td>Tax:</td>
+                        <td>${rowData[25]}</td>
                     </tr>
                 </table>
             `;
@@ -218,5 +306,7 @@
                 $(this).find('i').removeClass('fa-caret-down').addClass('fa-caret-up');
             }
         });
+
+        
     });
 </script>
