@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\bir1601;
+use App\Models\pre_bir_1601;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class ReportController extends Controller
 {
@@ -79,5 +81,24 @@ class ReportController extends Controller
     {
         $bir1601s = bir1601::all();
         return view('test.index', compact('bir1601s'));
+    }
+
+    public function preBir1601()
+    {
+
+        $pre_bir_1601s = pre_bir_1601::all();
+
+        foreach ($pre_bir_1601s as $pre_bir_1601) {
+            // Decrypt the encrypted fields
+            $pre_bir_1601->basic_pay = Crypt::decryptString($pre_bir_1601->basic_pay);
+            $pre_bir_1601->total_premium = Crypt::decryptString($pre_bir_1601->total_premium);
+            $pre_bir_1601->total_dmm = Crypt::decryptString($pre_bir_1601->total_dmm);
+            $pre_bir_1601->total_e = Crypt::decryptString($pre_bir_1601->total_e);
+            $pre_bir_1601->total_d = Crypt::decryptString($pre_bir_1601->total_d);
+            $pre_bir_1601->total_gross_pay_salary = Crypt::decryptString($pre_bir_1601->total_gross_pay_salary);
+            $pre_bir_1601->tax = Crypt::decryptString($pre_bir_1601->tax);
+        }
+
+        return view('test.encryptedbir', compact('pre_bir_1601s'));
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\PayrollCutoffSummary;
+use App\Models\pre_bir_1601;
 use App\Models\preBi1601;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class PayrollCuttoffSummaryController extends Controller
 {
@@ -61,16 +63,16 @@ class PayrollCuttoffSummaryController extends Controller
             
             // Loop through each summary and save them one by one
             foreach ($payroll_cuttoff_summaries as $summary) {
-                preBi1601::create([
+                pre_bir_1601::create([
                     'empID' => $summary->empID,
                     'cutoff' => $summary->cutoff,
-                    'basic_pay' => $summary->basicpay,
-                    'total_dmm' => $summary->total_dmm,
-                    'total_premium' => $summary->total_premium,
-                    'total_e' => $summary->total_e,
-                    'total_d' => $summary->total_d,
-                    'total_gross_pay_salary' => $summary->total_gross_pay_salary, // need to update
-                    'tax' => $summary->tax,
+                    'basic_pay' => Crypt::encryptString($summary->basicpay),
+                    'total_dmm' => Crypt::encryptString($summary->total_dmm),
+                    'total_premium' => Crypt::encryptString($summary->total_premium),
+                    'total_e' => Crypt::encryptString($summary->total_e),
+                    'total_d' => Crypt::encryptString($summary->total_d),
+                    'total_gross_pay_salary' => Crypt::encryptString($summary->basicpay), // need to update, should be total_gross_pay_salary
+                    'tax' => Crypt::encryptString($summary->tax),
                     '_token' => $request->_token,
                 ]);
             }

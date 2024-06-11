@@ -39,7 +39,7 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div>
+                            {{-- <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div> --}}
                             {{-- <div>BOU : {{ $bouID }}</div> --}}
                         </div>
                         <div class="row">
@@ -53,29 +53,28 @@
                                                     <th>Employee ID</th>
                                                     <th>Employee Name</th>
                                                     <th>Basic Pay</th>
-                                                    <th>Tot Prem</th>
-                                                    <th>Tot DMM</th>
-                                                    <th>Tot Proj Exp</th>
-                                                    <th>Tot Deduc</th>
-                                                    <th>Tot Gross Pay Salary</th>
+                                                    <th>Total Premium</th>
+                                                    <th>Total DMM</th>
+                                                    <th>Total Project Exp</th>
+                                                    <th>Total Deduction</th>
+                                                    <th>Total Gross Pay Salary</th>
                                                     <th>Tax</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($bir1601s as $bir1601)
+                                                @foreach($pre_bir_1601s as $pre_bir_1601)
                                                 <tr>
                                                     <td><button type="button" class="toggle-details"><i class="fa fa-caret-down"></i></button></td>
-                                                    <td>{{ $bir1601->empID }}</td>
-                                                    <td>{{ $bir1601->user->name }}</td>
-                                                    <td>{{ $bir1601->basic_pay }}</td>
-                                                    <td>{{ $bir1601->total_premium }}</td>
-                                                    <td>{{ $bir1601->total_dmm }}</td>
-                                                    <td>{{ $bir1601->total_e }}</td>
-                                                    <td>{{ $bir1601->total_d }}</td>
-                                                    <td>{{ $bir1601->total_gross_pay_salary }}</td>
-                                                    <td>{{ $bir1601->tax }}</td>
+                                                    <td>{{ $pre_bir_1601->empID }}</td>
+                                                    <td>{{ $pre_bir_1601->user->name }}</td>
+                                                    <td>{{ $pre_bir_1601->basic_pay }}</td>
+                                                    <td>{{ $pre_bir_1601->total_premium }}</td>
+                                                    <td>{{ $pre_bir_1601->total_dmm }}</td>
+                                                    <td>{{ $pre_bir_1601->total_e }}</td>
+                                                    <td>{{ $pre_bir_1601->total_d }}</td>
+                                                    <td>{{ $pre_bir_1601->total_gross_pay_salary }}</td>
+                                                    <td>{{ $pre_bir_1601->tax }}</td>
                                                 </tr>
-                                                
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -97,15 +96,15 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Total Basic Pay : </strong></td>
-                                            <td> {{ number_format($total_basic, 2) }}</td>
+                                            {{-- <td> {{ number_format($total_basic, 2) }}</td> --}}
                                         </tr>
                                         <tr>
                                             <td><strong>Total Premium : </strong></td>
-                                            <td> {{ number_format($total_premium, 2) }}</td>
+                                            {{-- <td> {{ number_format($total_premium, 2) }}</td> --}}
                                         </tr>
                                         <tr>
                                             <td><strong>Total Project Expense : </strong></td>
-                                            <td> {{ number_format($total_expense, 2) }}</td>
+                                            {{-- <td> {{ number_format($total_expense, 2) }}</td> --}}
                                         </tr>
                                         {{-- ₱ --}}
                                     </table>
@@ -177,23 +176,23 @@
                         <td>${rowData[3]}</td>
                     </tr>
                     <tr>
-                        <td>Tot Prem:</td>
+                        <td>Total Premium:</td>
                         <td>${rowData[4]}</td>
                     </tr>
                     <tr>
-                        <td>Tot DMM:</td>
+                        <td>Total DMM:</td>
                         <td>${rowData[5]}</td>
                     </tr>
                     <tr>
-                        <td>Tot Proj Exp:</td>
+                        <td>Total Project Expense:</td>
                         <td>${rowData[6]}</td>
                     </tr>
                     <tr>
-                        <td>Tot Deduc:</td>
+                        <td>Total Deduction:</td>
                         <td>${rowData[7]}</td>
                     </tr>
                     <tr>
-                        <td>Tot Gross Pay:</td>
+                        <td>Total Gross Pay Salary:</td>
                         <td>${rowData[8]}</td>
                     </tr>
                     <tr>

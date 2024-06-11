@@ -24,7 +24,8 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
-          <a href="{{ route('test.index') }}">test</a>
+          <div><a href="{{ route('test.index') }}">test with caret</a></div>
+          <div><a href="{{ route('test.encryptedbir') }}">test bir1601 with encription</a></div>
     <div class="container">
         <div class="card">
             <div class="card-header bg-primary text-white">
@@ -164,5 +165,21 @@
                 width: '100%'
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+        var monthSelect = document.getElementById('month');
+        var yearSelect = document.getElementById('year');
+        var currentMonth = new Date().getMonth() + 1; // Months are 0 indexed, so adding 1
+        var currentYear = new Date().getFullYear();
+        monthSelect.value = currentMonth;
+        yearSelect.value = currentYear;
+
+        var monthSelectPlus = document.getElementById('monthplus');
+        var yearSelectPlus = document.getElementById('yearplus');
+        // var currentMonth = new Date().getMonth() + 1;
+        // var currentYear = new Date().getFullYear();
+        monthSelectPlus.value = currentMonth;
+        yearSelectPlus.value = currentYear;
+    });
     </script>
 @endsection

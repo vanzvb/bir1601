@@ -109,7 +109,9 @@
                                                     <input type="hidden" name="total_premium[]" value="{{ $payroll_cuttoff_summary->total_premium }}">
                                                     <input type="hidden" name="total_e[]" value="{{ $payroll_cuttoff_summary->total_e }}">
                                                     <input type="hidden" name="total_d[]" value="{{ $payroll_cuttoff_summary->total_d }}">
-                                                    <input type="hidden" name="total_gross_pay_salary[]" value="{{ $payroll_cuttoff_summary->total_gross_pay_salary }}">
+                                                    {{-- <input type="hidden" name="total_gross_pay_salary[]" value="{{ $payroll_cuttoff_summary->total_gross_pay_salary }}"> --}}
+                                                    {{-- Temporary basicpay for added value --}}
+                                                    <input type="hidden" name="total_gross_pay_salary[]" value="{{ $payroll_cuttoff_summary->basicpay }}"> 
                                                     <input type="hidden" name="tax[]" value="{{ $payroll_cuttoff_summary->tax }}">
                                                 </tr>
                                                 @endforeach
