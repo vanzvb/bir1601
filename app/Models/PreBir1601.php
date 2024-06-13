@@ -13,6 +13,8 @@ class PreBir1601 extends Model
 
     protected $fillable = [
         'empID', 
+        'month',
+        'year',
         'tin',
         'bouID',
         'basic_pay_first', // cutoff 1-15

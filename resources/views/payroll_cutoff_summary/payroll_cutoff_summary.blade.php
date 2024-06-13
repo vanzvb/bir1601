@@ -135,6 +135,8 @@
 
                                                     <!-- Hidden inputs to capture the data -->
                                                     <input type="hidden" name="empID[]" value="{{ $payroll_cuttoff_summary->user->id }}">
+                                                    <input type="hidden" name="month[]" value="{{ $payroll_cuttoff_summary->month }}">
+                                                    <input type="hidden" name="year[]" value="{{ $payroll_cuttoff_summary->year }}">
                                                     <input type="hidden" name="basic_pay_first[]" value="{{ $payroll_cuttoff_summary->BasicPay1 }}">
                                                     <input type="hidden" name="basic_pay_second[]" value="{{ $payroll_cuttoff_summary->BasicPay2 }}">
                                                     <input type="hidden" name="basic_pay_total[]" value="{{ $payroll_cuttoff_summary->TotalBasicPay }}">

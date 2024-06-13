@@ -124,37 +124,38 @@ class PayrollCuttoffSummaryController extends Controller
             ->where('month', $month)
             ->groupBy('empID', 'year', 'month')
             ->get();
+
             
+
             // Loop through each summary and save them one by one
-            // foreach ($payroll_cuttoff_summaries as $summary) {
-            //     PreBir1601::create([
-            //         'empID' => $summary->empID,
-            //         'basic_pay_first' => $summary->
-            //     ]);
-            // }
-
-            // 'basic_pay_first', // cutoff 1-15
-            // 'basic_pay_second', // cutoff 16-31
-            // 'basic_pay_total', // basic
-
-            // 'premium_first', // cutoff 1-15
-            // 'premium_second', // cutoff 16-31
-            // 'tot_premium',  // premium
-            // 'dmm_first', // cutoff 1-15
-            // 'dmm_second', // cutoff 16-31
-            // 'tot_dmm', //diminimis
-            // 'proj_exp_first', // cutoff 1-15
-            // 'proj_exp_second', // cutoff 16-31
-            // 'tot_proj_exp', // (proj exp reim) total_e in payroll_cutoff_summary
-            // 'deduction_first', // cutoff 1-15
-            // 'deduction_second', // cutoff 16-31
-            // 'tot_deduction', // (deduction) total_d in payroll_cutoff_summary
-            // 'gross_pay_first', // cutoff 1-15
-            // 'gross_pay_second', // cutoff 16-31
-            // 'tot_gross_pay_salary', // gross pay
-            // 'tax_first', // cutoff 1-15
-            // 'tax_second', // cutoff 16-31
-            // 'tot_tax', // taxable
+            foreach ($payroll_cuttoff_summaries as $summary) {
+                PreBir1601::create([
+                    'empID' => $summary->empID,
+                    'month' => $summary->month,
+                    'year' => $summary->year,
+                    'basic_pay_first' => $summary->BasicPay1,
+                    'basic_pay_second' => $summary->BasicPay2,
+                    'basic_pay_total' => $summary->TotalBasicPay,
+                    'premium_first' => $summary->Premium1,
+                    'premium_second' => $summary->Premium1,
+                    'tot_premium' => $summary->TotalPremium,
+                    'dmm_first' => $summary->DMM1,
+                    'dmm_second' => $summary->DMM2,
+                    'tot_dmm' => $summary->TotalDMM,
+                    'proj_exp_first' => $summary->ProjExp1,
+                    'proj_exp_second' => $summary->ProjExp2,
+                    'tot_proj_exp' => $summary->TotalProjExp,
+                    'deduction_first' => $summary->Deduction1,
+                    'deduction_second' => $summary->Deduction2,
+                    'tot_deduction' => $summary->TotalDeduction,
+                    'gross_pay_first' => $summary->GrossPaySal1,
+                    'gross_pay_second' => $summary->GrossPaySal2,
+                    'tot_gross_pay_salary' => $summary->TotalGrossPaySal,
+                    'tax_first' => $summary->Tax1,
+                    'tax_second' => $summary->Tax2,
+                    'tot_tax' => $summary->TotalTax
+                ]);
+            }
 
             // encryption syntax 
             // 'tax' => Crypt::encryptString($summary->tax),

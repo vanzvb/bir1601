@@ -24,8 +24,6 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
-          {{-- <div><a href="{{ route('test.index') }}">test with caret</a></div> --}}
-          {{-- <div><a href="{{ route('test.encryptedbir') }}">test bir1601 with encription</a></div> --}}
     <div class="container">
         <div class="card">
             <div class="card-header bg-primary text-white">
@@ -37,7 +35,6 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    {{-- <form action="{{ route('reports.bir1601') }}" method="GET"> --}}
                         <div class="table-responsive">
                             <table class="table table-bordered w-100">
                                 <thead>
@@ -50,7 +47,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- <form action="{{ route('reports.bir1601') }}" method="GET"> --}}
                                     <form action="{{ route('test.encryptedbir') }}" method="GET">
                                         <tr>
                                             <td>BIR 1601</td>
@@ -65,17 +61,12 @@
                                             <td>
                                                 <select id="year" name="year" class="form-select select2" required>
                                                     <option value="">Select Year</option>
-                                                    {{-- @for ($y = date('Y'); $y >= 2000; $y--)
-                                                        <option value="{{ $y }}">{{ $y }}</option>
-                                                    @endfor --}}
                                                     @for ($y = 2029; $y >= 2019; $y--)
                                                     <option value="{{ $y }}">{{ $y }}</option>
                                                     @endfor
                                                 </select>   
                                             </td>
                                             <td>
-
-                                                {{-- <label for="bou">Choose a BOU:</label> --}}
                                                 <select name="bouID[]" id="bouID" class="form-select select2" multiple="multiple" required>
                                                     <option value="">Select BOU</option>
                                                     @foreach($company_bous as $company_bou)
@@ -106,9 +97,6 @@
                                             <td>
                                                 <select id="yearplus" name="year" class="form-select select2" required>
                                                     <option value="">Select Year</option>
-                                                    {{-- @for ($y = date('Y'); $y >= 2019; $y--)
-                                                        <option value="{{ $y }}">{{ $y }}</option>
-                                                    @endfor --}}
                                                     @for ($y = 2029; $y >= 2019; $y--)
                                                     <option value="{{ $y }}">{{ $y }}</option>
                                                     @endfor

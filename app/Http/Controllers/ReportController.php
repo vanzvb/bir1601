@@ -90,24 +90,16 @@ class ReportController extends Controller
         $year = $request->input('year');
         $bouID = $request->input('bouID', []);
 
-        // $pre_bir_1601s = PreBir1601::all();
 
-        // Filter records based on month and year
-        $pre_bir_1601s = PreBir1601::where('month', $month)
-        ->where('year', $year)
-        ->get();
+        // Filter records based on month, year, and bouID
+        $query = PreBir1601::where('month', $month)
+                            ->where('year', $year);
 
-        // Encryption
-        // foreach ($pre_bir_1601s as $pre_bir_1601) {
-            // Decrypt the encrypted fields
-            // $pre_bir_1601->basic_pay = Crypt::decryptString($pre_bir_1601->basic_pay);
-            // $pre_bir_1601->total_premium = Crypt::decryptString($pre_bir_1601->total_premium);
-            // $pre_bir_1601->total_dmm = Crypt::decryptString($pre_bir_1601->total_dmm);
-            // $pre_bir_1601->total_e = Crypt::decryptString($pre_bir_1601->total_e);
-            // $pre_bir_1601->total_d = Crypt::decryptString($pre_bir_1601->total_d);
-            // $pre_bir_1601->total_gross_pay_salary = Crypt::decryptString($pre_bir_1601->total_gross_pay_salary);
-            // $pre_bir_1601->tax = Crypt::decryptString($pre_bir_1601->tax);
-        // }
+        if (!empty($bouIDs)) {
+            $query->whereIn('bouID', $bouIDs);
+        }
+
+        $pre_bir_1601s = $query->get();
 
         $total_basic_pay = 0;
         $total_dmm = 0;
