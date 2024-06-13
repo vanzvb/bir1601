@@ -88,10 +88,16 @@ class ReportController extends Controller
     {
         $month = $request->input('month');
         $year = $request->input('year');
-        $bouID = $request->input('bouID');
+        $bouID = $request->input('bouID', []);
 
-        $pre_bir_1601s = PreBir1601::all();
+        // $pre_bir_1601s = PreBir1601::all();
 
+        // Filter records based on month and year
+        $pre_bir_1601s = PreBir1601::where('month', $month)
+        ->where('year', $year)
+        ->get();
+
+        // Encryption
         // foreach ($pre_bir_1601s as $pre_bir_1601) {
             // Decrypt the encrypted fields
             // $pre_bir_1601->basic_pay = Crypt::decryptString($pre_bir_1601->basic_pay);

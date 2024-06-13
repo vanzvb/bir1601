@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PayrollCutoffSummary>
@@ -21,15 +22,47 @@ class PayrollCutoffSummaryFactory extends Factory
 
         // Get an existing user's id from the users table
         $userId = User::inRandomOrder()->first()->id;
+
+        // Generate a random year between 2019 and the current year
+        // $year = $this->faker->numberBetween(2019, 2024); // random year from 2019-2024
+        $year = 2024;
+
+        // If the year is 2024, limit the months to May
+        $month = ($year == 2024) ? $this->faker->numberBetween(4, 4) : $this->faker->numberBetween(1, 12);
+
+        // Ensure each user has one cutoff value 1 and one cutoff value 2 per month
+        $cutoff = $phRowId % 2 == 0 ? 2 : 1;
+        $phRowId++;
+
+        // Ensure uniqueness per user, month, year, and cutoff
+        $exists = DB::table('payroll_cutoff_summaries')->where([
+            ['empID', $userId],
+            ['month', $month],
+            ['year', $year],
+            ['cutoff', $cutoff],
+        ])->exists();
+
+        // Regenerate month, year, and cutoff if the combination already exists
+        while ($exists) {
+            $year = $this->faker->numberBetween(2019, 2024);
+            $month = ($year == 2024) ? $this->faker->numberBetween(1, 5) : $this->faker->numberBetween(1, 12);
+            $cutoff = $phRowId % 2 == 0 ? 2 : 1;
+            $exists = DB::table('payroll_cutoff_summaries')->where([
+                ['empID', $userId],
+                ['month', $month],
+                ['year', $year],
+                ['cutoff', $cutoff],
+            ])->exists();
+        }
         
         return [
             'pSummaryID' => $this->faker->unique()->regexify('[A-Za-z0-9]{50}'),
             'dtrSummaryID' => $this->faker->unique()->regexify('[A-Za-z0-9]{200}'),
             'payslipNo' => $this->faker->unique()->regexify('[A-Za-z0-9]{50}'),
             'empID' => $userId,
-            'month' => $this->faker->numberBetween(1, 12),
-            'cutoff' => $this->faker->numberBetween(1, 2),
-            'year' => $this->faker->numberBetween(2010, 2025),
+            'month' => $month,
+            'cutoff' => $cutoff,
+            'year' => $year,
             'paydate' => $this->faker->date(),
             'period' => $this->faker->optional()->text(100),
             'basicpay' => $this->faker->randomNumber(5),

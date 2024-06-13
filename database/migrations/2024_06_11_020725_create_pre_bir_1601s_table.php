@@ -17,6 +17,8 @@ return new class extends Migration
             // $table->integer('cutoff')->nullable(); //cutoff 0 = 1-15 / 1 = 16-30
             $table->string('tin')->nullable();
             $table->unsignedBigInteger('bouID')->nullable();
+            $table->integer('month');   // int 11
+            $table->integer('year');   // int 11
             $table->string('basic_pay_first')->nullable(); // cutoff 1-15
             $table->string('basic_pay_second')->nullable(); // cutoff 16-31
             $table->string('basic_pay_total')->nullable(); // basic

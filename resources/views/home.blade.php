@@ -76,10 +76,10 @@
                                             <td>
 
                                                 {{-- <label for="bou">Choose a BOU:</label> --}}
-                                                <select name="bouID" id="bouID" class="form-select select2" required>
+                                                <select name="bouID[]" id="bouID" class="form-select select2" multiple="multiple" required>
                                                     <option value="">Select BOU</option>
                                                     @foreach($company_bous as $company_bou)
-                                                        <option value="{{ $company_bou->id }}">{{ $company_bou->bouName }}</option>
+                                                        <option value="{{ $company_bou->bouID }}">{{ $company_bou->bouName }}</option>
                                                     @endforeach
                                                 </select>
 

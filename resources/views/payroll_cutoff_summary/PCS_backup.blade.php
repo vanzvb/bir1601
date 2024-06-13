@@ -69,93 +69,50 @@
                                             <thead>
                                                 <tr>
                                                     <th>Employee Name</th>
+                                                    <th>Cut Off</th>
                                                     <th>Month</th>
                                                     <th>Year</th>
-                                                    <th>Basic Pay(1-15)</th>
-                                                    <th>Basic Pay(16-31)</th>
-                                                    <th>Total Basic Pay</th>
-                                                    <th>Premium (1-15)</th>
-                                                    <th>Premium (16-31)</th>
-                                                    <th>Total Premium</th>
-                                                    <th>DMM(1-15)</th>
-                                                    <th>DMM(16-31)</th>
+                                                    <th>Basic Pay</th>
                                                     <th>Total DMM</th>
-                                                    <th>Proj Exp(1-15)</th>
-                                                    <th>Proj Exp(16-31)</th>
-                                                    <th>Total Proj Exp Reim</th>
-                                                    <th>Deduction(1-15)</th>
-                                                    <th>Deduction(16-31)</th>
-                                                    <th>Total Deduction</th>
-                                                    <th>Gross Pay Salary(1-15)</th>
-                                                    <th>Gross Pay Salary(16-31)</th>
-                                                    <th>Total Gross Pay Salary</th>
-                                                    <th>Tax(1-15)</th>
-                                                    <th>Tax(16-31)</th>
-                                                    <th>Total Tax</th>
-                                                    {{-- <th>Total Project Exp</th>
+                                                    <th>Total Project Exp</th>
                                                     <th>Total Deduction</th>
                                                     <th>Total Gross Pay Salary</th>
-                                                    <th>Tax</th> --}}
+                                                    <th>Tax</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($payroll_cuttoff_summaries as $payroll_cuttoff_summary)
                                                 <tr>
                                                     <td>{{ $payroll_cuttoff_summary->user->name }}</td>
-                                                    {{-- <td>
+                                                    <td>
                                                         @if($payroll_cuttoff_summary->cutoff == 1)
                                                             1-15
                                                         @elseif($payroll_cuttoff_summary->cutoff == 2)
                                                             16-31
                                                         @endif
-                                                    </td> --}}
+                                                    </td>
                                                     <td>{{ DateTime::createFromFormat('!m', $payroll_cuttoff_summary->month)->format('F') }}</td>
                                                     <td>{{ $payroll_cuttoff_summary->year }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->BasicPay1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->BasicPay2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalBasicPay, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Premium1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Premium2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalPremium, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->DMM1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->DMM2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalDMM, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->ProjExp1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->ProjExp2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalProjExp, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Deduction1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Deduction2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalDeduction, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->GrossPaySal1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->GrossPaySal2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalGrossPaySal, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Tax1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Tax2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalTax, 2) }}</td>
+                                                    <td>{{ number_format($payroll_cuttoff_summary->basicpay, 2) }}</td>
+                                                    <td>{{ number_format($payroll_cuttoff_summary->total_dmm, 2) }}</td>
+                                                    <td>{{ number_format($payroll_cuttoff_summary->total_e, 2) }}</td>
+                                                    <td>{{ number_format($payroll_cuttoff_summary->total_d, 2) }}</td>
+                                                    {{-- <td>N/A</td> TEMPORARY Change to total_gross_pay_salary--}}
+                                                    <td>{{ number_format($payroll_cuttoff_summary->total_premium, 2) }}</td> 
+                                                    <td>{{ number_format($payroll_cuttoff_summary->tax, 2) }}</td>
 
                                                     <!-- Hidden inputs to capture the data -->
                                                     <input type="hidden" name="empID[]" value="{{ $payroll_cuttoff_summary->user->id }}">
-                                                    <input type="hidden" name="basic_pay_first[]" value="{{ $payroll_cuttoff_summary->BasicPay1 }}">
-                                                    <input type="hidden" name="basic_pay_second[]" value="{{ $payroll_cuttoff_summary->BasicPay2 }}">
-                                                    <input type="hidden" name="basic_pay_total[]" value="{{ $payroll_cuttoff_summary->TotalBasicPay }}">
-                                                    <input type="hidden" name="premium_first[]" value="{{ $payroll_cuttoff_summary->Premium1 }}">
-                                                    <input type="hidden" name="premium_second[]" value="{{ $payroll_cuttoff_summary->Premium2 }}">
-                                                    <input type="hidden" name="tot_premium[]" value="{{ $payroll_cuttoff_summary->TotalPremium }}">
-                                                    <input type="hidden" name="dmm_first[]" value="{{ $payroll_cuttoff_summary->DMM1 }}">
-                                                    <input type="hidden" name="dmm_second[]" value="{{ $payroll_cuttoff_summary->DMM2 }}">
-                                                    <input type="hidden" name="tot_dmm[]" value="{{ $payroll_cuttoff_summary->TotalDMM }}">
-                                                    <input type="hidden" name="proj_exp_first[]" value="{{ $payroll_cuttoff_summary->ProjExp1 }}">
-                                                    <input type="hidden" name="proj_exp_second[]" value="{{ $payroll_cuttoff_summary->ProjExp2 }}">
-                                                    <input type="hidden" name="tot_proj_exp[]" value="{{ $payroll_cuttoff_summary->TotalProjExp }}">
-                                                    <input type="hidden" name="deduction_first[]" value="{{ $payroll_cuttoff_summary->Deduction1 }}">
-                                                    <input type="hidden" name="deduction_second[]" value="{{ $payroll_cuttoff_summary->Deduction2 }}">
-                                                    <input type="hidden" name="tot_deduction[]" value="{{ $payroll_cuttoff_summary->TotalDeduction }}">
-                                                    <input type="hidden" name="gross_pay_first[]" value="{{ $payroll_cuttoff_summary->GrossPaySal1 }}"> 
-                                                    <input type="hidden" name="gross_pay_second[]" value="{{ $payroll_cuttoff_summary->GrossPaySal2 }}"> 
-                                                    <input type="hidden" name="tot_gross_pay_salary[]" value="{{ $payroll_cuttoff_summary->TotalGrossPaySal }}"> 
-                                                    <input type="hidden" name="tax_first[]" value="{{ $payroll_cuttoff_summary->Tax1 }}">
-                                                    <input type="hidden" name="tax_second[]" value="{{ $payroll_cuttoff_summary->Tax2 }}">
-                                                    <input type="hidden" name="tot_tax[]" value="{{ $payroll_cuttoff_summary->TotalTax }}">
+                                                    <input type="hidden" name="cutoff[]" value="{{ $payroll_cuttoff_summary->cutoff }}">
+                                                    <input type="hidden" name="basic_pay[]" value="{{ $payroll_cuttoff_summary->basicpay }}">
+                                                    <input type="hidden" name="total_dmm[]" value="{{ $payroll_cuttoff_summary->total_dmm }}">
+                                                    <input type="hidden" name="total_premium[]" value="{{ $payroll_cuttoff_summary->total_premium }}">
+                                                    <input type="hidden" name="total_e[]" value="{{ $payroll_cuttoff_summary->total_e }}">
+                                                    <input type="hidden" name="total_d[]" value="{{ $payroll_cuttoff_summary->total_d }}">
+                                                    {{-- <input type="hidden" name="total_gross_pay_salary[]" value="{{ $payroll_cuttoff_summary->total_gross_pay_salary }}"> --}}
+                                                    {{-- Temporary basicpay for added value --}}
+                                                    <input type="hidden" name="total_gross_pay_salary[]" value="{{ $payroll_cuttoff_summary->basicpay }}"> 
+                                                    <input type="hidden" name="tax[]" value="{{ $payroll_cuttoff_summary->tax }}">
                                                 </tr>
                                                 @endforeach
                                             </tbody>
