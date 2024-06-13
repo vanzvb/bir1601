@@ -97,7 +97,7 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Total Basic Pay : </strong></td>
-                                            <td> {{ number_format($total_basic, 2) }}</td>
+                                            <td> {{ number_format($total_basic_pay, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Total Premium : </strong></td>

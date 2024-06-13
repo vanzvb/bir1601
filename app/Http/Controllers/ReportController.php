@@ -90,10 +90,6 @@ class ReportController extends Controller
         $year = $request->input('year');
         $bouID = $request->input('bouID');
 
-        $total_expense = 0;
-        $total_deduction = 0; 
-        $total_gross_pay_salary = 0;
-
         $pre_bir_1601s = PreBir1601::all();
 
         // foreach ($pre_bir_1601s as $pre_bir_1601) {
@@ -107,6 +103,16 @@ class ReportController extends Controller
             // $pre_bir_1601->tax = Crypt::decryptString($pre_bir_1601->tax);
         // }
 
-        return view('test.encryptedbir', compact('pre_bir_1601s','month', 'year','bouID'));
+        $total_basic_pay = 0;
+        $total_dmm = 0;
+        $total_project_exp = 0;
+
+        foreach ($pre_bir_1601s as $pre_bir_1601) {
+            $total_basic_pay += intval($pre_bir_1601->basic_pay_total);
+            $total_dmm += intval($pre_bir_1601->tot_dmm);
+            $total_project_exp += intval($pre_bir_1601->tot_proj_exp);
+        }
+        
+        return view('test.encryptedbir', compact('pre_bir_1601s','month', 'year','bouID', 'total_basic_pay', 'total_dmm', 'total_project_exp'));
     }
 }

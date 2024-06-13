@@ -38,10 +38,12 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div>
                             {{-- <div>BOU : {{ $bouID }}</div> --}}
                         </div>
+                        <div><button id="exportCsv" class="btn btn-primary">Export to CSV</button></div>
                         <div class="row">
                             <div class="col-md-12 mt-3">
                                 <form id="leavesForm">
@@ -128,15 +130,15 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Total Basic Pay : </strong></td>
-                                            {{-- <td> {{ number_format($total_basic, 2) }}</td> --}}
+                                            <td> {{ number_format($total_basic_pay, 2) }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Total Premium : </strong></td>
-                                            {{-- <td> {{ number_format($total_premium, 2) }}</td> --}}
+                                            <td><strong>Total DMM : </strong></td>
+                                            <td> {{ number_format($total_dmm, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Total Project Expense : </strong></td>
-                                            {{-- <td> {{ number_format($total_expense, 2) }}</td> --}}
+                                            <td> {{ number_format($total_project_exp, 2) }}</td>
                                         </tr>
                                         {{-- ₱ --}}
                                     </table>
@@ -183,7 +185,7 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-    $(document).ready(function() {
+     $(document).ready(function() {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -193,14 +195,13 @@
         var table = $('#manageBIR').DataTable({
             "columnDefs": [
                 {
-                    "targets": [5, 6, 7, 8, 9, 10, 11, 12, 13 , 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], // Columns 4 to 10
+                    "targets": [5, 6, 7, 8, 9, 10, 11, 12, 13 , 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], // Columns 5 to 25
                     "visible": false // Hide these columns by default
                 }
             ]
         });
 
         function format(rowData) {
-            // Create a string with the hidden columns' data
             return `
                 <table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">
                     <tr>
@@ -291,22 +292,95 @@
             `;
         }
 
-        // Handle button click to show/hide details rows
         $('#manageBIR tbody').on('click', 'button.toggle-details', function() {
             var tr = $(this).closest('tr');
             var row = table.row(tr);
 
             if (row.child.isShown()) {
-                // Hide the details row
                 row.child.hide();
                 $(this).find('i').removeClass('fa-caret-up').addClass('fa-caret-down');
             } else {
-                // Show the details row
                 row.child(format(row.data())).show();
                 $(this).find('i').removeClass('fa-caret-down').addClass('fa-caret-up');
             }
         });
 
-        
+        // Specify columns to include in the CSV export (0-based indices)
+        var exportColumns = [1, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]; // Customize as needed
+
+        // Mapping of column indices to custom header names
+        var columnHeaders = {
+            1: "TIN NO.",
+            3: "NAME",
+            5: "Basic Pay 1",
+            6: "Basic Pay 2",
+            7: "Basic Total",
+            8: "Premium 1",
+            9: "Premium 2",
+            10: "Premium Total",
+            11: "DMM 1",
+            12: "DMM 2",
+            13: "DMM Total",
+            14: "Proj Exp Reim 1",
+            15: "Proj Exp Reim 2",
+            16: "Proj Exp Reim Total",
+            17: "Deductions 1",
+            18: "Deductions 2",
+            19: "Deductions Total",
+            20: "Gross Pay Salary 1",
+            21: "Gross Pay Salary 2",
+            22: "Gross Pay Total Salary",
+            23: "Taxable 1",
+            24: "Taxable 2",
+            25: "Total Taxable"
+        };
+
+        function exportToCsv(filename, rows) {
+            var csvFile = '';
+            var header = exportColumns.map(idx => columnHeaders[idx]).join(',');
+            csvFile += header + '\n';
+            rows.forEach(function(row) {
+                var rowData = exportColumns.map(idx => row[idx]).join(',');
+                csvFile += rowData + '\n';
+            });
+
+            var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+            if (navigator.msSaveBlob) {
+                navigator.msSaveBlob(blob, filename);
+            } else {
+                var link = document.createElement("a");
+                if (link.download !== undefined) {
+                    var url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", filename);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        }
+
+        function getFormattedDate() {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
+            return year + "-" + month + "-" + day;
+        }
+
+        $('#exportCsv').on('click', function() {
+            var rows = [];
+            table.rows().every(function() {
+                var rowData = this.data();
+                var row = {};
+                exportColumns.forEach(function(idx) {
+                    row[idx] = rowData[idx];
+                });
+                rows.push(row);
+            });
+            var filename = 'bir1601_' + getFormattedDate() + '.csv';
+            exportToCsv(filename, rows);
+        });
     });
 </script>

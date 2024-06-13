@@ -24,8 +24,8 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
-          <div><a href="{{ route('test.index') }}">test with caret</a></div>
-          <div><a href="{{ route('test.encryptedbir') }}">test bir1601 with encription</a></div>
+          {{-- <div><a href="{{ route('test.index') }}">test with caret</a></div> --}}
+          {{-- <div><a href="{{ route('test.encryptedbir') }}">test bir1601 with encription</a></div> --}}
     <div class="container">
         <div class="card">
             <div class="card-header bg-primary text-white">
