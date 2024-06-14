@@ -46,8 +46,8 @@ class PreBir1601Factory extends Factory
 
         return [
             'empID' => $userId,
-            'tin' => $this->faker->regexify('[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}'),
-            'bouID' => $bouId,
+            // 'tin' => $this->faker->regexify('[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}'),
+            // 'bouID' => $bouId,
             'basic_pay_first' => (string)$basicPayFirst,
             'basic_pay_second' => (string)$basicPaySecond,
             'basic_pay_total' => (string)$basicPayTotal,

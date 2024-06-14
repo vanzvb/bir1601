@@ -18,7 +18,22 @@ class CompanyBouFactory extends Factory
     {
         return [
             'bouID' => $this->faker->unique()->lexify('BOU?????'),
-            'bouName' => $this->faker->words(3, true),
+            'bouName' => $this->faker->unique()->randomElement([
+                'ABC Tech Solutions',
+                'Creative Minds Studio',
+                'Global Network Services',
+                'Innovative Concepts Group',
+                'Precision Builders Inc.',
+                'Gourmet Delights Catering',
+                'Sunset Properties',
+                'Blue Sky Advisory',
+                'Golden Gate Developers',
+                'Summit Marketing',
+                'Pioneer Logistics',
+                'Eagle Eye Security',
+                'Vivid Media Productions',
+                // Add more diverse names here
+            ]),
             'companyID' => $this->faker->unique()->lexify('COMP?????'),
             'isDefault' => $this->faker->boolean(10), // 10% chance of being the default
             'manager' => $this->faker->name,

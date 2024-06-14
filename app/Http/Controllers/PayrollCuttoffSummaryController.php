@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class PayrollCuttoffSummaryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // $users = User::all();
 
@@ -21,68 +21,83 @@ class PayrollCuttoffSummaryController extends Controller
         // $company_bous = CompanyBou::all();
         // $payroll_cuttoff_summaries = PayrollCutoffSummary::all();
 
-        $year = 2024; // Example year variable
-        $month = 4;   // Example month variable
+        // $year = 2024; // Example year variable
+        // $month = 4;   // Example month variable
 
-        $payroll_cuttoff_summaries = PayrollCutoffSummary::select([
-            'empID',
-            'year',
-            'month',
+        $year = $request->input('year', '');
+        $month = $request->input('month', '');
 
-            // BASIC PAY
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN BasicPay ELSE 0 END) AS BasicPay1'),
-            DB::raw('MAX(CASE WHEN cutoff = 2 THEN BasicPay ELSE 0 END) AS BasicPay2'),
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN BasicPay ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN BasicPay ELSE 0 END) AS TotalBasicPay'),
+        if ($year && $month) {
 
-            // PREMIUM
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_premium ELSE 0 END) AS Premium1'),
-            DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_premium ELSE 0 END) AS Premium2'),
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_premium ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_premium ELSE 0 END) AS TotalPremium'),
+            $payroll_cuttoff_summaries = PayrollCutoffSummary::select([
+                'empID',
+                'year',
+                'month',
+    
+                // BASIC PAY
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN BasicPay ELSE 0 END) AS BasicPay1'),
+                DB::raw('MAX(CASE WHEN cutoff = 2 THEN BasicPay ELSE 0 END) AS BasicPay2'),
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN BasicPay ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN BasicPay ELSE 0 END) AS TotalBasicPay'),
+    
+                // PREMIUM
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_premium ELSE 0 END) AS Premium1'),
+                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_premium ELSE 0 END) AS Premium2'),
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_premium ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_premium ELSE 0 END) AS TotalPremium'),
+    
+                // Deminimis
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_dmm ELSE 0 END) AS DMM1'),
+                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_dmm ELSE 0 END) AS DMM2'),
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_dmm ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_dmm ELSE 0 END) AS TotalDMM'),
+    
+                // Project Expense Reim
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) AS ProjExp1'),
+                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS ProjExp2'),
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS TotalProjExp'),
+    
+                // Deduction
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_d ELSE 0 END) AS Deduction1'),
+                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_d ELSE 0 END) AS Deduction2'),
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_d ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_d ELSE 0 END) AS TotalDeduction'),
+    
+                // Gross Pay Salary (sample total_e) but should be redo
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) AS GrossPaySal1'),
+                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS GrossPaySal2'),
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS TotalGrossPaySal'),
+    
+                // Taxable
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN tax ELSE 0 END) AS Tax1'),
+                DB::raw('MAX(CASE WHEN cutoff = 2 THEN tax ELSE 0 END) AS Tax2'),
+                DB::raw('MAX(CASE WHEN cutoff = 1 THEN tax ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN tax ELSE 0 END) AS TotalTax'),
+            ])
+            ->where('year', $year)
+            ->where('month', $month)
+            ->groupBy('empID', 'year', 'month')
+            ->get();
 
-            // Deminimis
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_dmm ELSE 0 END) AS DMM1'),
-            DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_dmm ELSE 0 END) AS DMM2'),
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_dmm ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_dmm ELSE 0 END) AS TotalDMM'),
+        } else {
+            $payroll_cuttoff_summaries = collect(); // Empty collection for the initial load
+        }
 
-            // Project Expense Reim
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) AS ProjExp1'),
-            DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS ProjExp2'),
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS TotalProjExp'),
 
-            // Deduction
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_d ELSE 0 END) AS Deduction1'),
-            DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_d ELSE 0 END) AS Deduction2'),
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_d ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_d ELSE 0 END) AS TotalDeduction'),
 
-            // Gross Pay Salary (sample total_e) but should be redo
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) AS GrossPaySal1'),
-            DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS GrossPaySal2'),
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS TotalGrossPaySal'),
-
-            // Taxable
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN tax ELSE 0 END) AS Tax1'),
-            DB::raw('MAX(CASE WHEN cutoff = 2 THEN tax ELSE 0 END) AS Tax2'),
-            DB::raw('MAX(CASE WHEN cutoff = 1 THEN tax ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN tax ELSE 0 END) AS TotalTax'),
-        ])
-        ->where('year', $year)
-        ->where('month', $month)
-        ->groupBy('empID', 'year', 'month')
-        ->get();
-
-        return view('payroll_cutoff_summary.payroll_cutoff_summary', compact('payroll_cuttoff_summaries'));
+        return view('payroll_cutoff_summary.payroll_cutoff_summary', compact('payroll_cuttoff_summaries','year','month'));
     }
 
     public function save(Request $request)
     {
+
+        $year = $request->input('year', '');
+        $month = $request->input('month', '');
 
         try {         
             
             // Start a transaction
             DB::beginTransaction();
 
-            $year = 2024; // Example year variable
-            $month = 4;   // Example month variable
-    
+            // $year = 2024; // Example year variable
+            // $month = 4;   // Example month variable
+        if ($year && $month) {
+
             $payroll_cuttoff_summaries = PayrollCutoffSummary::select([
                 'empID',
                 'year',
@@ -162,6 +177,9 @@ class PayrollCuttoffSummaryController extends Controller
 
             // Commit the transaction
             DB::commit();
+        } else {
+            $payroll_cuttoff_summaries = collect(); // Empty collection for the initial load
+        }
 
             // encryption syntax 
             // 'tax' => Crypt::encryptString($summary->tax),

@@ -45,6 +45,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
+            
+                <br/>
 
                 <div class="card">
                     <div class="card-header bg-primary text-white">
@@ -59,12 +61,38 @@
                             {{-- <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div> --}}
                             {{-- <div>BOU : {{ $bouID }}</div> --}}
                             {{-- <div><button type="button" class="btn btn-success">Transfer to 1601</button></div> --}}
+                            <form method="GET" action="{{ route('payroll_cutoff_summary.payroll_cutoff_summary') }}">
+                                <div class="form-group">
+                                    <label for="year">Year:</label>
+                                    <select name="year" id="year" class="form-control">
+                                        <option value="">Select Year</option>
+                                        @for($y = date('Y'); $y >= 2000; $y--)
+                                            <option value="{{ $y }}" {{ (old('year') == $y || $year == $y) ? 'selected' : '' }}>{{ $y }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="month">Month:</label>
+                                    <select name="month" id="month" class="form-control">
+                                        <option value="">Select Month</option>
+                                        @for($m = 1; $m <= 12; $m++)
+                                            <option value="{{ $m }}" {{ (old('month') == $m || $month == $m) ? 'selected' : '' }}>{{ $m }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </form>
                         </div>
+
                         <div class="row">
                             <div class="col-md-12 mt-3">
                                 <form method="post" action="{{ route('save.payroll') }}">
                                     @csrf
                                     <div class="table-responsive" style="width:100%">
+                                        @if($payroll_cuttoff_summaries->isEmpty())
+                                            <p>No data available.</p>
+                                        @else
                                         <table id="manageBIR" class="table table-bordered">
                                             <thead>
                                                 <tr>
@@ -162,6 +190,7 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        @endif
                                         <button type="submit" class="btn btn-success">Sync Data</button>
                                     </div>
                                 </form>

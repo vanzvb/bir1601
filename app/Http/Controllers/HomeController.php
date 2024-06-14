@@ -29,10 +29,10 @@ class HomeController extends Controller
 
         $users = User::all();
 
-        $bir1601s = bir1601::all();
+        // $bir1601s = bir1601::all();
 
         $company_bous = CompanyBou::all();
 
-        return view('home', compact('users', 'bir1601s', 'company_bous'));
+        return view('home', compact('users', 'company_bous'));
     }
 }

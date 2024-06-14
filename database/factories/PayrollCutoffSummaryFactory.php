@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -65,7 +66,7 @@ class PayrollCutoffSummaryFactory extends Factory
             'year' => $year,
             'paydate' => $this->faker->date(),
             'period' => $this->faker->optional()->text(100),
-            'basicpay' => $this->faker->randomNumber(5),
+            'basicpay' => Crypt::encrypt($this->faker->randomNumber(5)),
             'semim' => $this->faker->randomNumber(5),
             'dailyrate' => $this->faker->randomNumber(5),
             'hourlyrate' => $this->faker->randomNumber(5),
@@ -73,8 +74,8 @@ class PayrollCutoffSummaryFactory extends Factory
             'paidsl' => $this->faker->randomNumber(5),
             'paidbl' => $this->faker->randomNumber(5),
             'allowance' => $this->faker->randomNumber(5),
-            'total_dmm' => $this->faker->randomNumber(5),
-            'total_premium' => $this->faker->randomNumber(5),
+            'total_dmm' => Crypt::encrypt($this->faker->randomNumber(5)),
+            'total_premium' => Crypt::encrypt($this->faker->randomNumber(5)),
             'total_ot' => $this->faker->randomNumber(5),
             'total_nd' => $this->faker->randomNumber(5),
             'total_ndot' => $this->faker->randomNumber(5),
@@ -89,11 +90,11 @@ class PayrollCutoffSummaryFactory extends Factory
             'vl' => $this->faker->randomNumber(5),
             'sl' => $this->faker->randomNumber(5),
             'bl' => $this->faker->randomNumber(5),
-            'total_e' => $this->faker->randomNumber(5),
-            'total_d' => $this->faker->randomNumber(5),
+            'total_e' => Crypt::encrypt($this->faker->randomNumber(5)),
+            'total_d' => Crypt::encrypt($this->faker->randomNumber(5)),
             'net_p' => $this->faker->randomNumber(5),
             'taxbaseID' => $this->faker->unique()->regexify('[A-Za-z0-9]{50}'),
-            'tax' => $this->faker->randomNumber(5),
+            'tax' => Crypt::encrypt($this->faker->randomNumber(5)),
             'adjustment_add' => $this->faker->randomNumber(5),
             'adjustment_reason' => $this->faker->optional()->regexify('[A-Za-z0-9]{50}'),
             'adjustment_minus' => $this->faker->optional()->regexify('[A-Za-z0-9]{50}'),
