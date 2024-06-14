@@ -90,16 +90,17 @@ class ReportController extends Controller
         $year = $request->input('year');
         $bouID = $request->input('bouID', []);
 
+        $pre_bir_1601s = PreBir1601::all();
 
         // Filter records based on month, year, and bouID
-        $query = PreBir1601::where('month', $month)
-                            ->where('year', $year);
+        // $query = PreBir1601::where('month', $month)
+        //                     ->where('year', $year);
 
-        if (!empty($bouIDs)) {
-            $query->whereIn('bouID', $bouIDs);
-        }
+        // if (!empty($bouIDs)) {
+        //     $query->whereIn('bouID', $bouIDs);
+        // }
 
-        $pre_bir_1601s = $query->get();
+        // $pre_bir_1601s = $query->get();
 
         $total_basic_pay = 0;
         $total_dmm = 0;

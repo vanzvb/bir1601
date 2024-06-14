@@ -75,7 +75,10 @@ class PayrollCuttoffSummaryController extends Controller
     public function save(Request $request)
     {
 
-        try {            
+        try {         
+            
+            // Start a transaction
+            DB::beginTransaction();
 
             $year = 2024; // Example year variable
             $month = 4;   // Example month variable
@@ -133,35 +136,41 @@ class PayrollCuttoffSummaryController extends Controller
                     'empID' => $summary->empID,
                     'month' => $summary->month,
                     'year' => $summary->year,
-                    'basic_pay_first' => $summary->BasicPay1,
-                    'basic_pay_second' => $summary->BasicPay2,
-                    'basic_pay_total' => $summary->TotalBasicPay,
-                    'premium_first' => $summary->Premium1,
-                    'premium_second' => $summary->Premium1,
-                    'tot_premium' => $summary->TotalPremium,
-                    'dmm_first' => $summary->DMM1,
-                    'dmm_second' => $summary->DMM2,
-                    'tot_dmm' => $summary->TotalDMM,
-                    'proj_exp_first' => $summary->ProjExp1,
-                    'proj_exp_second' => $summary->ProjExp2,
-                    'tot_proj_exp' => $summary->TotalProjExp,
-                    'deduction_first' => $summary->Deduction1,
-                    'deduction_second' => $summary->Deduction2,
-                    'tot_deduction' => $summary->TotalDeduction,
-                    'gross_pay_first' => $summary->GrossPaySal1,
-                    'gross_pay_second' => $summary->GrossPaySal2,
-                    'tot_gross_pay_salary' => $summary->TotalGrossPaySal,
-                    'tax_first' => $summary->Tax1,
-                    'tax_second' => $summary->Tax2,
-                    'tot_tax' => $summary->TotalTax
+                    'basic_pay_first' => Crypt::encryptString($summary->BasicPay1),
+                    'basic_pay_second' => Crypt::encryptString($summary->BasicPay2),
+                    'basic_pay_total' => Crypt::encryptString($summary->TotalBasicPay),
+                    'premium_first' => Crypt::encryptString($summary->Premium1),
+                    'premium_second' => Crypt::encryptString($summary->Premium1),
+                    'tot_premium' => Crypt::encryptString($summary->TotalPremium),
+                    'dmm_first' => Crypt::encryptString($summary->DMM1),
+                    'dmm_second' => Crypt::encryptString($summary->DMM2),
+                    'tot_dmm' => Crypt::encryptString($summary->TotalDMM),
+                    'proj_exp_first' => Crypt::encryptString($summary->ProjExp1),
+                    'proj_exp_second' => Crypt::encryptString($summary->ProjExp2),
+                    'tot_proj_exp' => Crypt::encryptString($summary->TotalProjExp),
+                    'deduction_first' => Crypt::encryptString($summary->Deduction1),
+                    'deduction_second' => Crypt::encryptString($summary->Deduction2),
+                    'tot_deduction' => Crypt::encryptString($summary->TotalDeduction),
+                    'gross_pay_first' => Crypt::encryptString($summary->GrossPaySal1),
+                    'gross_pay_second' => Crypt::encryptString($summary->GrossPaySal2),
+                    'tot_gross_pay_salary' => Crypt::encryptString($summary->TotalGrossPaySal),
+                    'tax_first' => Crypt::encryptString($summary->Tax1),
+                    'tax_second' => Crypt::encryptString($summary->Tax2),
+                    'tot_tax' => Crypt::encryptString($summary->TotalTax)
                 ]);
             }
+
+            // Commit the transaction
+            DB::commit();
 
             // encryption syntax 
             // 'tax' => Crypt::encryptString($summary->tax),
 
             return redirect()->route('payroll_cutoff_summary.payroll_cutoff_summary')->with('success', 'Payroll transfered successfully.');
         } catch (Exception $e) {
+            // Rollback the transaction in case of error
+            DB::rollBack();
+
             // Log the exception for debugging purposes
             \Log::error('Error saving payroll data: ' . $e->getMessage());
 
