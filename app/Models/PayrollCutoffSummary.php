@@ -14,7 +14,7 @@ class PayrollCutoffSummary extends Model
     public function user()
     {
 
-        return $this->belongsTo(User::class, 'empID', 'id');
+        return $this->belongsTo(User::class, 'empID', 'individ');
 
     }
 }

@@ -58,27 +58,49 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                            {{-- <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div> --}}
-                            {{-- <div>BOU : {{ $bouID }}</div> --}}
-                            {{-- <div><button type="button" class="btn btn-success">Transfer to 1601</button></div> --}}
-                            <form method="GET" action="{{ route('payroll_cutoff_summary.payroll_cutoff_summary') }}">
-                                <div class="form-group">
-                                    <label for="year">Year:</label>
-                                    <select name="year" id="year" class="form-control">
-                                        <option value="">Select Year</option>
-                                        @for($y = date('Y'); $y >= 2000; $y--)
-                                            <option value="{{ $y }}" {{ (old('year') == $y || $year == $y) ? 'selected' : '' }}>{{ $y }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="month">Month:</label>
-                                    <select name="month" id="month" class="form-control">
-                                        <option value="">Select Month</option>
-                                        @for($m = 1; $m <= 12; $m++)
-                                            <option value="{{ $m }}" {{ (old('month') == $m || $month == $m) ? 'selected' : '' }}>{{ $m }}</option>
-                                        @endfor
-                                    </select>
+                            <form method="GET" action="{{ route('payroll_cutoff_summary.payroll_cutoff_summary') }}" class="w-100">
+                                <div class="row">
+                                    {{-- Card for BOU --}}
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="bouID">BOU:</label>
+                                            <select name="bouID[]" id="bouID" class="form-control select2" multiple required>
+                                                <option value="">Select BOU</option>
+                                                @foreach($companyBOUs as $companyBOU)
+                                                    <option value="{{ $companyBOU->bouID }}" {{ in_array($companyBOU->bouID, (array)$bouIDs) ? 'selected' : '' }}>
+                                                        {{ $companyBOU->bouName }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>  
+                                    </div>
+                                
+                                    {{-- card for year --}}
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="year">Year:</label>
+                                            <select name="year" id="year" class="form-control select2" required>
+                                                <option value="">Select Year</option>
+                                                @for($y = date('Y'); $y >= 2000; $y--)
+                                                    <option value="{{ $y }}" {{ (old('year') == $y || $year == $y) ? 'selected' : '' }}>{{ $y }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {{-- card for month --}}
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="months">Months:</label>
+                                            <select name="months[]" id="months" class="form-control select2" multiple
+                                                required>
+                                                @for($m = 1; $m <= 12; $m++)
+                                                <option value="{{ $m }}" {{ (in_array($m, $months)) ? 'selected' : '' }}>
+                                                    {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                                                </option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <br>
                                 <button type="submit" class="btn btn-primary">Filter</button>
@@ -97,11 +119,12 @@
                                             <thead>
                                                 <tr>
                                                     <th>Employee Name</th>
+                                                    <th>BOU</th>
                                                     <th>Month</th>
                                                     <th>Year</th>
                                                     <th>Basic Pay(1-15)</th>
                                                     <th>Basic Pay(16-31)</th>
-                                                    <th>Total Basic Pay</th>
+                                                    {{-- <th>Total Basic Pay</th>
                                                     <th>Premium (1-15)</th>
                                                     <th>Premium (16-31)</th>
                                                     <th>Total Premium</th>
@@ -119,7 +142,7 @@
                                                     <th>Total Gross Pay Salary</th>
                                                     <th>Tax(1-15)</th>
                                                     <th>Tax(16-31)</th>
-                                                    <th>Total Tax</th>
+                                                    <th>Total Tax</th> --}}
                                                     {{-- <th>Total Project Exp</th>
                                                     <th>Total Deduction</th>
                                                     <th>Total Gross Pay Salary</th>
@@ -127,66 +150,16 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($payroll_cuttoff_summaries as $payroll_cuttoff_summary)
-                                                <tr>
-                                                    <td>{{ $payroll_cuttoff_summary->user->name }}</td>
-                                                    {{-- <td>
-                                                        @if($payroll_cuttoff_summary->cutoff == 1)
-                                                            1-15
-                                                        @elseif($payroll_cuttoff_summary->cutoff == 2)
-                                                            16-31
-                                                        @endif
-                                                    </td> --}}
-                                                    <td>{{ DateTime::createFromFormat('!m', $payroll_cuttoff_summary->month)->format('F') }}</td>
-                                                    <td>{{ $payroll_cuttoff_summary->year }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->BasicPay1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->BasicPay2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalBasicPay, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Premium1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Premium2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalPremium, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->DMM1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->DMM2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalDMM, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->ProjExp1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->ProjExp2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalProjExp, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Deduction1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Deduction2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalDeduction, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->GrossPaySal1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->GrossPaySal2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalGrossPaySal, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Tax1, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->Tax2, 2) }}</td>
-                                                    <td>{{ number_format($payroll_cuttoff_summary->TotalTax, 2) }}</td>
-
-                                                    <!-- Hidden inputs to capture the data -->
-                                                    <input type="hidden" name="empID[]" value="{{ $payroll_cuttoff_summary->user->id }}">
-                                                    <input type="hidden" name="month[]" value="{{ $payroll_cuttoff_summary->month }}">
-                                                    <input type="hidden" name="year[]" value="{{ $payroll_cuttoff_summary->year }}">
-                                                    <input type="hidden" name="basic_pay_first[]" value="{{ $payroll_cuttoff_summary->BasicPay1 }}">
-                                                    <input type="hidden" name="basic_pay_second[]" value="{{ $payroll_cuttoff_summary->BasicPay2 }}">
-                                                    <input type="hidden" name="basic_pay_total[]" value="{{ $payroll_cuttoff_summary->TotalBasicPay }}">
-                                                    <input type="hidden" name="premium_first[]" value="{{ $payroll_cuttoff_summary->Premium1 }}">
-                                                    <input type="hidden" name="premium_second[]" value="{{ $payroll_cuttoff_summary->Premium2 }}">
-                                                    <input type="hidden" name="tot_premium[]" value="{{ $payroll_cuttoff_summary->TotalPremium }}">
-                                                    <input type="hidden" name="dmm_first[]" value="{{ $payroll_cuttoff_summary->DMM1 }}">
-                                                    <input type="hidden" name="dmm_second[]" value="{{ $payroll_cuttoff_summary->DMM2 }}">
-                                                    <input type="hidden" name="tot_dmm[]" value="{{ $payroll_cuttoff_summary->TotalDMM }}">
-                                                    <input type="hidden" name="proj_exp_first[]" value="{{ $payroll_cuttoff_summary->ProjExp1 }}">
-                                                    <input type="hidden" name="proj_exp_second[]" value="{{ $payroll_cuttoff_summary->ProjExp2 }}">
-                                                    <input type="hidden" name="tot_proj_exp[]" value="{{ $payroll_cuttoff_summary->TotalProjExp }}">
-                                                    <input type="hidden" name="deduction_first[]" value="{{ $payroll_cuttoff_summary->Deduction1 }}">
-                                                    <input type="hidden" name="deduction_second[]" value="{{ $payroll_cuttoff_summary->Deduction2 }}">
-                                                    <input type="hidden" name="tot_deduction[]" value="{{ $payroll_cuttoff_summary->TotalDeduction }}">
-                                                    <input type="hidden" name="gross_pay_first[]" value="{{ $payroll_cuttoff_summary->GrossPaySal1 }}"> 
-                                                    <input type="hidden" name="gross_pay_second[]" value="{{ $payroll_cuttoff_summary->GrossPaySal2 }}"> 
-                                                    <input type="hidden" name="tot_gross_pay_salary[]" value="{{ $payroll_cuttoff_summary->TotalGrossPaySal }}"> 
-                                                    <input type="hidden" name="tax_first[]" value="{{ $payroll_cuttoff_summary->Tax1 }}">
-                                                    <input type="hidden" name="tax_second[]" value="{{ $payroll_cuttoff_summary->Tax2 }}">
-                                                    <input type="hidden" name="tot_tax[]" value="{{ $payroll_cuttoff_summary->TotalTax }}">
-                                                </tr>
+                                                @foreach($payroll_cuttoff_summaries as $summary)
+                                                    <tr>
+                                                        <td>{{ $summary['user']->name ?? 'N/A' }}</td>
+                                                        <td>{{ $summary['user']->companyBOU->bouName ?? 'N/A' }}</td>
+                                                        <td>{{ $summary['year'] }}</td>
+                                                        <td>{{ $summary['month'] }}</td>
+                                                        <td>{{ $summary['basicpay0'] }}</td>
+                                                        <td>{{ $summary['basicpay1'] }}</td>
+                                                        <!-- Add other columns as needed -->
+                                                    </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -238,34 +211,34 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-        $(document).ready(function() {
+    $(document).ready(function() {
 
-
-
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-
-// Initialize select2 for select dropdowns
-initializeSelect2('#filterBou', null, "Select BOU");
-
-let manageLeavesTable = $('#manageBIR').DataTable({
-    processing: true,
-    responsive: true,
-});
-
-
-// Initialize select2 for select dropdowns
-function initializeSelect2(element, dropdownParent = null, placeholder = "") {
-    $(element).select2({
-        theme: 'bootstrap-5',
-        width: '100%',
-        dropdownParent,
-        placeholder
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
     });
-}
+
+    // Initialize select2 for select dropdowns
+    initializeSelect2('#bouID');
+    initializeSelect2('#year');
+    initializeSelect2('#months');
+
+    let manageLeavesTable = $('#manageBIR').DataTable({
+        processing: true,
+        responsive: true,
+    });
+
+
+    // Initialize select2 for select dropdowns
+    function initializeSelect2(element, dropdownParent = null, placeholder = "") {
+        $(element).select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            dropdownParent,
+            placeholder
+        });
+    }
 
 });
         

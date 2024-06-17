@@ -32,7 +32,7 @@ class PayrollCutoffSummaryFactory extends Factory
         $month = ($year == 2024) ? $this->faker->numberBetween(4, 4) : $this->faker->numberBetween(1, 12);
 
         // Ensure each user has one cutoff value 1 and one cutoff value 2 per month
-        $cutoff = $phRowId % 2 == 0 ? 2 : 1;
+        $cutoff = $phRowId % 2 == 0 ? 0 : 1;
         $phRowId++;
 
         // Ensure uniqueness per user, month, year, and cutoff
@@ -47,7 +47,7 @@ class PayrollCutoffSummaryFactory extends Factory
         while ($exists) {
             $year = $this->faker->numberBetween(2019, 2024);
             $month = ($year == 2024) ? $this->faker->numberBetween(1, 5) : $this->faker->numberBetween(1, 12);
-            $cutoff = $phRowId % 2 == 0 ? 2 : 1;
+            $cutoff = $phRowId % 2 == 0 ? 0 : 1;
             $exists = DB::table('payroll_cutoff_summaries')->where([
                 ['empID', $userId],
                 ['month', $month],

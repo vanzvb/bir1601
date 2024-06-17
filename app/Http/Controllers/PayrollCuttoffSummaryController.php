@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CompanyBou;
 use App\Models\PayrollCutoffSummary;
 use App\Models\pre_bir_1601;
 use App\Models\preBi1601;
@@ -14,24 +15,27 @@ class PayrollCuttoffSummaryController extends Controller
 {
     public function index(Request $request)
     {
-        // $users = User::all();
-
-        // $bir1601s = bir1601::all();
-
-        // $company_bous = CompanyBou::all();
-        // $payroll_cuttoff_summaries = PayrollCutoffSummary::all();
-
+        // for testing purposes
         // $year = 2024; // Example year variable
-        // $month = 4;   // Example month variable
+        // $months = [4, 5, 6]; // Example array of months
+        // $bouID = "BOUpzuwc";
+        
+        $year = $request->input('year');
+        $months = $request->input('months', []); // Assuming 'months' input is an array
+        $bouIDs = $request->input('bouID', []);
 
-        $year = $request->input('year', '');
-        $month = $request->input('month', '');
+        $companyBOUs = CompanyBou::all(); // Retrieve all CompanyBOU records
 
-        if ($year && $month) {
+        if ($year && !empty($months) && !empty($bouIDs)) {
 
-            $payroll_cuttoff_summaries = PayrollCutoffSummary::where('year', $year)
-            ->where('month', $month)
+            $payroll_cuttoff_summaries = PayrollCutoffSummary::with('user.companyBOU')
+            ->where('year', $year)
+            ->whereIn('month', $months)
+            ->whereHas('user', function ($query) use ($bouIDs) {
+                $query->whereIn('bouID', $bouIDs);
+            })
             ->get([
+                'empID',
                 'year',
                 'month',
                 'basicpay',
@@ -43,62 +47,68 @@ class PayrollCuttoffSummaryController extends Controller
                 'tax'
             ]);
 
-            
 
-            $payroll_cuttoff_summaries->map(function ($summary) {
-                // Decrypt BasicPay1 for cutoff 0
-                MAX(CASE WHEN $summary->cutoff = 1 THEN $summary->basicpay ELSE 0 END) AS BasicPay1');
-                dd($summary);
-                $summary->BasicPay1 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->BasicPay) : 0;
-    
-                // Decrypt BasicPay2 for cutoff 1
-                $summary->BasicPay2 = ($summary->cutoff == 2) ? Crypt::decrypt($summary->BasicPay) : 0;
-    
-                // Calculate TotalBasicPay
-                $summary->TotalBasicPay = $summary->BasicPay1 + $summary->BasicPay2;
-                
-                
-                // Repeat the same process for other fields if needed
-                // Example for Premium:
-                $summary->Premium1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_premium) : 0;
-                $summary->Premium2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_premium) : 0;
-                $summary->TotalPremium = $summary->Premium1 + $summary->Premium2;
-    
-                // Example for DMM:
-                $summary->DMM1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_dmm) : 0;
-                $summary->DMM2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_dmm) : 0;
-                $summary->TotalDMM = $summary->DMM1 + $summary->DMM2;
-    
-                // Example for Project Expense:
-                $summary->ProjExp1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_e) : 0;
-                $summary->ProjExp2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_e) : 0;
-                $summary->TotalProjExp = $summary->ProjExp1 + $summary->ProjExp2;
-    
-                // Example for Deduction:
-                $summary->Deduction1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_d) : 0;
-                $summary->Deduction2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_d) : 0;
-                $summary->TotalDeduction = $summary->Deduction1 + $summary->Deduction2;
-    
-                // Example for Gross Pay Salary:
-                $summary->GrossPaySal1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_e) : 0;
-                $summary->GrossPaySal2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_e) : 0;
-                $summary->TotalGrossPaySal = $summary->GrossPaySal1 + $summary->GrossPaySal2;
-    
-                // Example for Tax:
-                $summary->Tax1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->tax) : 0;
-                $summary->Tax2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->tax) : 0;
-                $summary->TotalTax = $summary->Tax1 + $summary->Tax2;
-    
-                // return $summary;
+            // Decrypting encrypted columns
+            $decrypted_summaries = $payroll_cuttoff_summaries->map(function ($summary) {
+                $summary->basicpay = Crypt::decrypt($summary->basicpay);
+                $summary->total_dmm = Crypt::decrypt($summary->total_dmm);
+                $summary->total_e = Crypt::decrypt($summary->total_e);
+                $summary->total_d = Crypt::decrypt($summary->total_d);
+                $summary->total_premium = Crypt::decrypt($summary->total_premium);
+                $summary->tax = Crypt::decrypt($summary->tax);
+                return $summary;
             });
-            dd($payroll_cuttoff_summaries);
+
+            // Group by empID
+            $grouped_summaries = $decrypted_summaries->groupBy('empID');
+
+            $result = [];
+
+            foreach ($grouped_summaries as $empID => $summaries) {
+                $monthly_data = [];
+        
+                foreach ($summaries as $summary) {
+                    $year = $summary->year;
+                    $month = $summary->month;
+                    $cutoff = $summary->cutoff;
+        
+                    if (!isset($monthly_data[$month])) {
+                        $monthly_data[$month] = [
+                            'empID' => $empID,
+                            'year' => $year,
+                            'month' => $month,
+                            'basicpay0' => null,
+                            'basicpay1' => null,
+                            'user' => $summary->user, // Include user data
+                            // Initialize other columns as needed
+                        ];
+                    }
+        
+                    if ($cutoff == 0) {
+                        $monthly_data[$month]['basicpay0'] = $summary->basicpay;
+                        // Add other columns as needed for cutoff 0
+                    } elseif ($cutoff == 1) {
+                        $monthly_data[$month]['basicpay1'] = $summary->basicpay;
+                        // Add other columns as needed for cutoff 1
+                    }
+                }
+        
+                foreach ($monthly_data as $data) {
+                    $result[] = $data;
+                }
+            }
+        
+
+        // Convert $result to a collection
+        $payroll_cuttoff_summaries = collect($result);
+
         } else {
             $payroll_cuttoff_summaries = collect(); // Empty collection for the initial load
         }
 
         
 
-        return view('payroll_cutoff_summary.payroll_cutoff_summary', compact('payroll_cuttoff_summaries','year','month'));
+        return view('payroll_cutoff_summary.payroll_cutoff_summary', compact('payroll_cuttoff_summaries','year', 'companyBOUs','bouIDs','months'));
     }
 
     public function save(Request $request)
