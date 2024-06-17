@@ -19,7 +19,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         //BOU
-        $bouId = CompanyBou::inRandomOrder()->first()->id;
+        $bouId = CompanyBou::inRandomOrder()->first()->bouID;
 
         return [
             'name' => fake()->name(),

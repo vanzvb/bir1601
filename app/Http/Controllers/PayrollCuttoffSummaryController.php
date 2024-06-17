@@ -29,56 +29,74 @@ class PayrollCuttoffSummaryController extends Controller
 
         if ($year && $month) {
 
-            $payroll_cuttoff_summaries = PayrollCutoffSummary::select([
-                'empID',
+            $payroll_cuttoff_summaries = PayrollCutoffSummary::where('year', $year)
+            ->where('month', $month)
+            ->get([
                 'year',
                 'month',
-    
-                // BASIC PAY
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN BasicPay ELSE 0 END) AS BasicPay1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN BasicPay ELSE 0 END) AS BasicPay2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN BasicPay ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN BasicPay ELSE 0 END) AS TotalBasicPay'),
-    
-                // PREMIUM
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_premium ELSE 0 END) AS Premium1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_premium ELSE 0 END) AS Premium2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_premium ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_premium ELSE 0 END) AS TotalPremium'),
-    
-                // Deminimis
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_dmm ELSE 0 END) AS DMM1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_dmm ELSE 0 END) AS DMM2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_dmm ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_dmm ELSE 0 END) AS TotalDMM'),
-    
-                // Project Expense Reim
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) AS ProjExp1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS ProjExp2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS TotalProjExp'),
-    
-                // Deduction
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_d ELSE 0 END) AS Deduction1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_d ELSE 0 END) AS Deduction2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_d ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_d ELSE 0 END) AS TotalDeduction'),
-    
-                // Gross Pay Salary (sample total_e) but should be redo
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) AS GrossPaySal1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS GrossPaySal2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS TotalGrossPaySal'),
-    
-                // Taxable
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN tax ELSE 0 END) AS Tax1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN tax ELSE 0 END) AS Tax2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN tax ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN tax ELSE 0 END) AS TotalTax'),
-            ])
-            ->where('year', $year)
-            ->where('month', $month)
-            ->groupBy('empID', 'year', 'month')
-            ->get();
+                'basicpay',
+                'cutoff',
+                'total_dmm',
+                'total_e',
+                'total_d',
+                'total_premium',
+                'tax'
+            ]);
 
+            
+
+            $payroll_cuttoff_summaries->map(function ($summary) {
+                // Decrypt BasicPay1 for cutoff 0
+                MAX(CASE WHEN $summary->cutoff = 1 THEN $summary->basicpay ELSE 0 END) AS BasicPay1');
+                dd($summary);
+                $summary->BasicPay1 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->BasicPay) : 0;
+    
+                // Decrypt BasicPay2 for cutoff 1
+                $summary->BasicPay2 = ($summary->cutoff == 2) ? Crypt::decrypt($summary->BasicPay) : 0;
+    
+                // Calculate TotalBasicPay
+                $summary->TotalBasicPay = $summary->BasicPay1 + $summary->BasicPay2;
+                
+                
+                // Repeat the same process for other fields if needed
+                // Example for Premium:
+                $summary->Premium1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_premium) : 0;
+                $summary->Premium2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_premium) : 0;
+                $summary->TotalPremium = $summary->Premium1 + $summary->Premium2;
+    
+                // Example for DMM:
+                $summary->DMM1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_dmm) : 0;
+                $summary->DMM2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_dmm) : 0;
+                $summary->TotalDMM = $summary->DMM1 + $summary->DMM2;
+    
+                // Example for Project Expense:
+                $summary->ProjExp1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_e) : 0;
+                $summary->ProjExp2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_e) : 0;
+                $summary->TotalProjExp = $summary->ProjExp1 + $summary->ProjExp2;
+    
+                // Example for Deduction:
+                $summary->Deduction1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_d) : 0;
+                $summary->Deduction2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_d) : 0;
+                $summary->TotalDeduction = $summary->Deduction1 + $summary->Deduction2;
+    
+                // Example for Gross Pay Salary:
+                $summary->GrossPaySal1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->total_e) : 0;
+                $summary->GrossPaySal2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->total_e) : 0;
+                $summary->TotalGrossPaySal = $summary->GrossPaySal1 + $summary->GrossPaySal2;
+    
+                // Example for Tax:
+                $summary->Tax1 = ($summary->cutoff == 0) ? Crypt::decrypt($summary->tax) : 0;
+                $summary->Tax2 = ($summary->cutoff == 1) ? Crypt::decrypt($summary->tax) : 0;
+                $summary->TotalTax = $summary->Tax1 + $summary->Tax2;
+    
+                // return $summary;
+            });
+            dd($payroll_cuttoff_summaries);
         } else {
             $payroll_cuttoff_summaries = collect(); // Empty collection for the initial load
         }
 
-
+        
 
         return view('payroll_cutoff_summary.payroll_cutoff_summary', compact('payroll_cuttoff_summaries','year','month'));
     }

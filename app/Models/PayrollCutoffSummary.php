@@ -9,6 +9,8 @@ class PayrollCutoffSummary extends Model
 {
     use HasFactory;
 
+    
+
     public function user()
     {
 

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\CompanyBou;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CompanyBouFactory extends Factory
 {
+
+    protected $model = CompanyBou::class;
     /**
      * Define the model's default state.
      *

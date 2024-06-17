@@ -21,8 +21,8 @@ class PayrollCutoffSummaryFactory extends Factory
     {
         static $phRowId = 1; // Start with 1 and increment by 1 for each new record
 
-        // Get an existing user's id from the users table
-        $userId = User::inRandomOrder()->first()->id;
+        // Get an existing user's individ from the users table
+        $userId = User::inRandomOrder()->first()->individ;
 
         // Generate a random year between 2019 and the current year
         // $year = $this->faker->numberBetween(2019, 2024); // random year from 2019-2024
