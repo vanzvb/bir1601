@@ -46,12 +46,12 @@ class PreBir1601 extends Model
     {
         // return $this->belongsTo(User::class);
 
-        return $this->belongsTo(User::class, 'empID', 'id');
+        return $this->belongsTo(User::class, 'empID', 'individ');
 
     }
 
     public function companyBou()
     {
-        return $this->belongsTo(CompanyBou::class, 'bouID', 'id');
+        return $this->belongsTo(CompanyBou::class, 'bouID', 'bouID');
     }
 }

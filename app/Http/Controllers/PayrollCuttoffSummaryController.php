@@ -157,9 +157,9 @@ class PayrollCuttoffSummaryController extends Controller
                     'empID' => $empID,
                     'month' => $month,
                     'year' => $year,
-                    'basic_pay_first' => Crypt::encryptString($basicpay0),
-                    'basic_pay_second' => Crypt::encryptString($basicpay1),
-                    'basic_pay_total' => Crypt::encryptString($totalBasicPay)
+                    'basic_pay_first' => Crypt::encrypt($basicpay0),
+                    'basic_pay_second' => Crypt::encrypt($basicpay1),
+                    'basic_pay_total' => Crypt::encrypt($totalBasicPay)
                 ]);
             }
 

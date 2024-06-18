@@ -13,4 +13,9 @@ class CompanyBou extends Model
     {
         return $this->hasMany(User::class, 'bouID', 'bouID');
     }
+
+    public function companyBous()
+    {
+        return $this->hasMany(CompanyBou::class, 'bouID', 'bouID');
+    }
 }

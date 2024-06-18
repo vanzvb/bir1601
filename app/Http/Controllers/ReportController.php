@@ -31,6 +31,8 @@ class ReportController extends Controller
 
         $bir1601s = bir1601::all();
 
+        dd($bir1601s);
+
         foreach ($bir1601s as $bir1601) {
             
             $total_basic = $total_basic + $bir1601->basic_pay; // A
@@ -101,6 +103,20 @@ class ReportController extends Controller
         // }
 
         // $pre_bir_1601s = $query->get();
+
+        // Decrypting encrypted columns
+        $decrypted_summaries = $pre_bir_1601s->map(function ($summary) {
+            $summary->basic_pay_first = Crypt::decrypt($summary->basic_pay_first);
+            $summary->basic_pay_second = Crypt::decrypt($summary->basic_pay_second);
+            $summary->basic_pay_total = $summary->basic_pay_first + $summary->basic_pay_second;
+            // $summary->total_dmm = Crypt::decrypt($summary->total_dmm);
+            // $summary->total_e = Crypt::decrypt($summary->total_e);
+            // $summary->total_d = Crypt::decrypt($summary->total_d);
+            // $summary->total_premium = Crypt::decrypt($summary->total_premium);
+            // $summary->tax = Crypt::decrypt($summary->tax);
+            // dd($summary);
+            return $summary;
+        });
 
         $total_basic_pay = 0;
         $total_dmm = 0;
