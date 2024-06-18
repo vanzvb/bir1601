@@ -48,7 +48,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div><strong>Parameter {{ $month }}, {{ $year }}</strong></div>
                         <div>
-                            <button id="exportCsv" class="btn btn-primary me-2">Export to CSV</button>
+                            <button id="exportXls" class="btn btn-primary me-2">Export to Excel</button>
                             <form action="{{ route('clear.pre_bir_1601s') }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-danger"
@@ -175,6 +175,10 @@
 <script src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>
+
+<!-- CDN for  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+
 
 <!-- Font Awesome 6.5 JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"
@@ -332,30 +336,23 @@
             25: "Total Taxable"
         };
 
-        function exportToCsv(filename, rows) {
-            var csvFile = '';
-            var header = exportColumns.map(idx => columnHeaders[idx]).join(',');
-            csvFile += header + '\n';
+        function exportToXls(filename, rows) {
+            var wb = XLSX.utils.book_new();
+            var ws_data = [];
+
+            // Add headers
+            var header = exportColumns.map(idx => columnHeaders[idx]);
+            ws_data.push(header);
+
+            // Add rows
             rows.forEach(function(row) {
-                var rowData = exportColumns.map(idx => row[idx]).join(',');
-                csvFile += rowData + '\n';
+                var rowData = exportColumns.map(idx => row[idx]);
+                ws_data.push(rowData);
             });
 
-            var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
-            if (navigator.msSaveBlob) {
-                navigator.msSaveBlob(blob, filename);
-            } else {
-                var link = document.createElement("a");
-                if (link.download !== undefined) {
-                    var url = URL.createObjectURL(blob);
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", filename);
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }
-            }
+            var ws = XLSX.utils.aoa_to_sheet(ws_data);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, filename);
         }
 
         function getFormattedDate() {
@@ -366,7 +363,7 @@
             return year + "-" + month + "-" + day;
         }
 
-        $('#exportCsv').on('click', function() {
+        $('#exportXls').on('click', function() {
             var rows = [];
             table.rows().every(function() {
                 var rowData = this.data();
@@ -376,8 +373,9 @@
                 });
                 rows.push(row);
             });
-            var filename = 'bir1601_' + getFormattedDate() + '.csv';
-            exportToCsv(filename, rows);
-        });
+            var filename = 'bir1601_' + getFormattedDate() + '.xlsx';
+            exportToXls(filename, rows);
+        }); 
     });
+    
 </script>

@@ -29,7 +29,7 @@ class PayrollCutoffSummaryFactory extends Factory
         $year = 2024;
 
         // If the year is 2024, limit the months to May
-        $month = ($year == 2024) ? $this->faker->numberBetween(3, 4) : $this->faker->numberBetween(1, 12);
+        $month = ($year == 2024) ? $this->faker->numberBetween(2, 4) : $this->faker->numberBetween(1, 12);
 
         // Ensure each user has one cutoff value 1 and one cutoff value 2 per month
         $cutoff = $phRowId % 2 == 0 ? 0 : 1;
@@ -66,7 +66,9 @@ class PayrollCutoffSummaryFactory extends Factory
             'year' => $year,
             'paydate' => $this->faker->date(),
             'period' => $this->faker->optional()->text(100),
-            'basicpay' => Crypt::encrypt($this->faker->randomNumber(5)),
+            'basicpay' => Crypt::encrypt(
+                number_format($this->faker->randomFloat(2, 0, 999999.99), 2, '.', ',')
+            ),
             'semim' => $this->faker->randomNumber(5),
             'dailyrate' => $this->faker->randomNumber(5),
             'hourlyrate' => $this->faker->randomNumber(5),
@@ -74,8 +76,12 @@ class PayrollCutoffSummaryFactory extends Factory
             'paidsl' => $this->faker->randomNumber(5),
             'paidbl' => $this->faker->randomNumber(5),
             'allowance' => $this->faker->randomNumber(5),
-            'total_dmm' => Crypt::encrypt($this->faker->randomNumber(5)),
-            'total_premium' => Crypt::encrypt($this->faker->randomNumber(5)),
+            'total_dmm' => Crypt::encrypt(
+                number_format($this->faker->randomFloat(2, 0, 999999.99), 2, '.', ',')
+            ),
+            'total_premium' => Crypt::encrypt(
+                number_format($this->faker->randomFloat(2, 0, 999999.99), 2, '.', ',')
+            ),
             'total_ot' => $this->faker->randomNumber(5),
             'total_nd' => $this->faker->randomNumber(5),
             'total_ndot' => $this->faker->randomNumber(5),
@@ -90,11 +96,17 @@ class PayrollCutoffSummaryFactory extends Factory
             'vl' => $this->faker->randomNumber(5),
             'sl' => $this->faker->randomNumber(5),
             'bl' => $this->faker->randomNumber(5),
-            'total_e' => Crypt::encrypt($this->faker->randomNumber(5)),
-            'total_d' => Crypt::encrypt($this->faker->randomNumber(5)),
+            'total_e' => Crypt::encrypt(
+                number_format($this->faker->randomFloat(2, 0, 999999.99), 2, '.', ',')
+            ),
+            'total_d' => Crypt::encrypt(
+                number_format($this->faker->randomFloat(2, 0, 999999.99), 2, '.', ',')
+            ),
             'net_p' => $this->faker->randomNumber(5),
             'taxbaseID' => $this->faker->unique()->regexify('[A-Za-z0-9]{50}'),
-            'tax' => Crypt::encrypt($this->faker->randomNumber(5)),
+            'tax' => Crypt::encrypt(
+                number_format($this->faker->randomFloat(2, 0, 999999.99), 2, '.', ',')
+            ),
             'adjustment_add' => $this->faker->randomNumber(5),
             'adjustment_reason' => $this->faker->optional()->regexify('[A-Za-z0-9]{50}'),
             'adjustment_minus' => $this->faker->optional()->regexify('[A-Za-z0-9]{50}'),

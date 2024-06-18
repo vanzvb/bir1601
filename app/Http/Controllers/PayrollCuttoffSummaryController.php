@@ -64,6 +64,8 @@ class PayrollCuttoffSummaryController extends Controller
 
             $result = [];
 
+
+
             foreach ($grouped_summaries as $empID => $summaries) {
                 $monthly_data = [];
         
@@ -92,24 +94,38 @@ class PayrollCuttoffSummaryController extends Controller
                     }
         
                     if ($cutoff == 0) {
-                        $monthly_data[$month]['basicpay0'] = $summary->basicpay;
-                        $monthly_data[$month]['premium0'] = $summary->total_premium;
-                        $monthly_data[$month]['dmm0'] = $summary->total_dmm;
+                        $monthly_data[$month]['basicpay0'] =  $summary->basicpay;
+                        $monthly_data[$month]['premium0'] =  $summary->total_premium;
+                        $monthly_data[$month]['dmm0'] =  $summary->total_dmm;
                         // Add other columns as needed for cutoff 0
                     } elseif ($cutoff == 1) {
-                        $monthly_data[$month]['basicpay1'] = $summary->basicpay;
-                        $monthly_data[$month]['premium1'] = $summary->total_premium;
-                        $monthly_data[$month]['dmm1'] = $summary->total_dmm;
+                        $monthly_data[$month]['basicpay1'] =  $summary->basicpay;
+                        $monthly_data[$month]['premium1'] =  $summary->total_premium;
+                        $monthly_data[$month]['dmm1'] =  $summary->total_dmm;
                         // Add other columns as needed for cutoff 1
                     }
 
 
-                // Calculate all total
-                $monthly_data[$month]['totalBasicPay'] =  $monthly_data[$month]['basicpay0'] + $monthly_data[$month]['basicpay1'];
+                    // Calculate all total
+                    // $monthly_data[$month]['totalBasicPay'] =  $monthly_data[$month]['basicpay0'] + $monthly_data[$month]['basicpay1'];
+                    $monthly_data[$month]['totalBasicPay'] = number_format(
+                        floatval(str_replace(',', '', $monthly_data[$month]['basicpay0'])) + 
+                        floatval(str_replace(',', '', $monthly_data[$month]['basicpay1'])),
+                        2
+                    );
 
-                $monthly_data[$month]['totalPremium'] =  $monthly_data[$month]['premium0'] + $monthly_data[$month]['premium1'];
+                    $monthly_data[$month]['totalPremium'] = number_format(
+                        floatval(str_replace(',', '', $monthly_data[$month]['premium0'])) + 
+                        floatval(str_replace(',', '', $monthly_data[$month]['premium1'])),
+                        2
+                    );
 
-                $monthly_data[$month]['totalDmm'] =  $monthly_data[$month]['dmm0'] + $monthly_data[$month]['dmm1'];
+                    $monthly_data[$month]['totalDmm'] = number_format(
+                        floatval(str_replace(',', '', $monthly_data[$month]['dmm0'])) + 
+                        floatval(str_replace(',', '', $monthly_data[$month]['dmm1'])),
+                        2
+                    );
+
                 }
         
                 foreach ($monthly_data as $data) {
