@@ -35,3 +35,7 @@ Route::get('/payroll-cuttof-summary', [App\Http\Controllers\PayrollCuttoffSummar
 
 // generate1601
 Route::post('/save/payroll', [App\Http\Controllers\PayrollCuttoffSummaryController::class, 'save'])->name('save.payroll');
+
+// clear pre_bir_1601s
+
+Route::post('/clear-pre-bir-1601s', [App\Http\Controllers\ReportController::class, 'clear'])->name('clear.pre_bir_1601s');

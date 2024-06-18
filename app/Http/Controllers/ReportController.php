@@ -130,4 +130,15 @@ class ReportController extends Controller
         
         return view('test.encryptedbir', compact('pre_bir_1601s','month', 'year','bouID', 'total_basic_pay', 'total_dmm', 'total_project_exp'));
     }
+
+    public function clear()
+    {
+        try {
+            PreBir1601::truncate(); // Truncate deletes all records from the table
+            return redirect()->back()->with('status', 'Data cleared successfully.');
+        } catch (\Exception $e) {
+            // Handle any exceptions that occur during truncation
+            return redirect()->back()->with('error', 'Failed to clear data: ' . $e->getMessage());
+        }
+    }
 }

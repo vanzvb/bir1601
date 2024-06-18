@@ -27,134 +27,131 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div>
-            <div class="container">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h1 class="text-center fs-3">BIR 1601</h1>
-                            </div>
+        <div class="col-md-12">
+            @if (session('status'))
+            <div class="alert alert-success" role="alert">
+                {{ session('status') }}
+            </div>
+            @endif
+
+            @if (session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+            @endif
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="text-center fs-3">BIR 1601</h1>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div><strong>Parameter {{ $month }}, {{ $year }}</strong></div>
+                        <div>
+                            <button id="exportCsv" class="btn btn-primary me-2">Export to CSV</button>
+                            <form action="{{ route('clear.pre_bir_1601s') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-danger"
+                                    onclick="return confirm('Are you sure you want to clear all data?')">Clear
+                                    Database</button>
+                            </form>
                         </div>
                     </div>
-                    <div class="card-body">
-                        
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex justify-content-between align-items-center">Parameter {{ $month }} , {{ $year }}</div>
-                            {{-- <div>BOU : {{ $bouID }}</div> --}}
-                        </div>
-                        <div><button id="exportCsv" class="btn btn-primary">Export to CSV</button></div>
-                        <div class="row">
-                            <div class="col-md-12 mt-3">
-                                <form id="leavesForm">
-                                    <div class="table-responsive" style="width:100%">
-                                        <table id="manageBIR" class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>TIN</th>
-                                                    <th>Employee ID</th>
-                                                    <th>Employee Name</th>
-                                                    <th>BOU</th>
-                                                    <th>Basic Pay(1-15)</th>
-                                                    <th>Basic Pay(16-31)</th>
-                                                    <th>Tot Basic Pay</th>
-                                                    <th>Premium(1-15)</th>
-                                                    <th>Premium(16-31)</th>
-                                                    <th>Total Premium</th>
-                                                    <th>DMM(1-15)</th>
-                                                    <th>DMM(16-31)</th>
-                                                    <th>Tot DMM</th>
-                                                    <th>Proj Exp(1-15)</th>
-                                                    <th>Proj Exp(16-31)</th>
-                                                    <th>Tot Proj Exp</th>
-                                                    <th>Deduction(1-15)</th>
-                                                    <th>Deduction(16-31)</th>
-                                                    <th>Tot Deduction</th>
-                                                    <th>Gross Pay(1-15)</th>
-                                                    <th>Gross Pay(16-31)</th>
-                                                    <th>Tot Gross Pay</th>
-                                                    <th>Tax(1-15)</th>
-                                                    <th>Tax(16-31)</th>
-                                                    <th>Tax</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($pre_bir_1601s as $pre_bir_1601)
-                                                <tr>
-                                                    <td><button type="button" class="toggle-details"><i class="fa fa-caret-down"></i></button></td>
-                                                    <td>{{ $pre_bir_1601->tin }}</td>
-                                                    <td>{{ $pre_bir_1601->empID }}</td>
-                                                    <td>{{ $pre_bir_1601->user->name }}</td>
-                                                    {{-- <td>{{ $pre_bir_1601->companyBou->bouName }}</td> --}}
-                                                    <td> Sample BOU</td>
-                                                    <td>{{ $pre_bir_1601->basic_pay_first }}</td>
-                                                    <td>{{ $pre_bir_1601->basic_pay_second }}</td>
-                                                    <td>{{ $pre_bir_1601->basic_pay_total }}</td>
-                                                    {{-- <td>{{ Crypt::decryptString($pre_bir_1601->premium_first) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->premium_second) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_premium) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->dmm_first) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->dmm_second) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_dmm) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_first) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_second) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_proj_exp) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->deduction_first) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->deduction_second) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_deduction) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->gross_pay_first) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->gross_pay_second) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_gross_pay_salary) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->tax_first) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->tax_second) }}</td>
-                                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_tax) }}</td> --}}
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
 
-                        <!-- Card for totals and averages -->
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Summary</h5>
-                                <p class="card-text">
-                                    <table>
+                    <div class="table-responsive">
+                        <table id="manageBIR" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>TIN</th>
+                                    <th>Employee ID</th>
+                                    <th>Employee Name</th>
+                                    <th>BOU</th>
+                                    <th>Basic Pay(1-15)</th>
+                                    <th>Basic Pay(16-31)</th>
+                                    <th>Tot Basic Pay</th>
+                                    <th>Premium(1-15)</th>
+                                    <th>Premium(16-31)</th>
+                                    <th>Total Premium</th>
+                                    <th>DMM(1-15)</th>
+                                    <th>DMM(16-31)</th>
+                                    <th>Tot DMM</th>
+                                    <th>Proj Exp(1-15)</th>
+                                    <th>Proj Exp(16-31)</th>
+                                    <th>Tot Proj Exp</th>
+                                    <th>Deduction(1-15)</th>
+                                    <th>Deduction(16-31)</th>
+                                    <th>Tot Deduction</th>
+                                    <th>Gross Pay(1-15)</th>
+                                    <th>Gross Pay(16-31)</th>
+                                    <th>Tot Gross Pay</th>
+                                    <th>Tax(1-15)</th>
+                                    <th>Tax(16-31)</th>
+                                    <th>Tax</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($pre_bir_1601s as $pre_bir_1601)
+                                <tr>
+                                    <td><button type="button" class="toggle-details"><i
+                                                class="fa fa-caret-down"></i></button></td>
+                                    <td>{{ $pre_bir_1601->tin }}</td>
+                                    <td>{{ $pre_bir_1601->empID }}</td>
+                                    <td>{{ $pre_bir_1601->user->name }}</td>
+                                    {{-- <td>{{ $pre_bir_1601->companyBou->bouName }}</td> --}}
+                                    <td>Sample BOU</td>
+                                    <td>{{ $pre_bir_1601->basic_pay_first }}</td>
+                                    <td>{{ $pre_bir_1601->basic_pay_second }}</td>
+                                    <td>{{ $pre_bir_1601->basic_pay_total }}</td>
+                                    {{-- <td>{{ Crypt::decryptString($pre_bir_1601->premium_first) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->premium_second) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_premium) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->dmm_first) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->dmm_second) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_dmm) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_first) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_second) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_proj_exp) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->deduction_first) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->deduction_second) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_deduction) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->gross_pay_first) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->gross_pay_second) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_gross_pay_salary) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->tax_first) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->tax_second) }}</td>
+                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_tax) }}</td> --}}
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Card for totals and averages -->
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Summary</h5>
+                            <p class="card-text">
+                                <table class="table">
+                                    <tbody>
                                         <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
+                                            <td><strong>Total Basic Pay :</strong></td>
+                                            <td>{{ number_format($total_basic_pay, 2) }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Total Basic Pay : </strong></td>
-                                            <td> {{ number_format($total_basic_pay, 2) }}</td>
+                                            <td><strong>Total DMM :</strong></td>
+                                            <td>{{ number_format($total_dmm, 2) }}</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Total DMM : </strong></td>
-                                            <td> {{ number_format($total_dmm, 2) }}</td>
+                                            <td><strong>Total Project Expense :</strong></td>
+                                            <td>{{ number_format($total_project_exp, 2) }}</td>
                                         </tr>
-                                        <tr>
-                                            <td><strong>Total Project Expense : </strong></td>
-                                            <td> {{ number_format($total_project_exp, 2) }}</td>
-                                        </tr>
-                                        {{-- ₱ --}}
-                                    </table>
-                                </p>
-                            </div>
+                                    </tbody>
+                                </table>
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
             </div>
         </div>
     </div>
