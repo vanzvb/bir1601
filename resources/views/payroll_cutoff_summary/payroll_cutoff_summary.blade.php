@@ -115,7 +115,7 @@
                                         @if($payroll_cuttoff_summaries->isEmpty())
                                             <p>No data available.</p>
                                         @else
-                                        <table id="manageBIR" class="table table-bordered">
+                                        <table id="payrollCutoffSummary" class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>Employee Name</th>
@@ -124,7 +124,8 @@
                                                     <th>Year</th>
                                                     <th>Basic Pay(1-15)</th>
                                                     <th>Basic Pay(16-31)</th>
-                                                    {{-- <th>Total Basic Pay</th>
+                                                    <th>Total Basic Pay</th>
+                                                    {{-- 
                                                     <th>Premium (1-15)</th>
                                                     <th>Premium (16-31)</th>
                                                     <th>Total Premium</th>
@@ -150,15 +151,24 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($payroll_cuttoff_summaries as $summary)
+                                                @foreach($payroll_cuttoff_summaries as $index => $summary)
                                                     <tr>
                                                         <td>{{ $summary['user']->name ?? 'N/A' }}</td>
                                                         <td>{{ $summary['user']->companyBOU->bouName ?? 'N/A' }}</td>
+                                                        <td>{{ DateTime::createFromFormat('!m', $summary['month'])->format('F') }}</td>
                                                         <td>{{ $summary['year'] }}</td>
-                                                        <td>{{ $summary['month'] }}</td>
                                                         <td>{{ $summary['basicpay0'] }}</td>
                                                         <td>{{ $summary['basicpay1'] }}</td>
+                                                        <td>{{ $summary['totalBasicPay'] }}</td>
                                                         <!-- Add other columns as needed -->
+                    <!-- Hidden inputs for each summary item -->
+                    <input type="hidden" name="summaries[{{ $index }}][empID]" value="{{ $summary['empID'] }}">
+                    {{-- <input type="hidden" name="summaries[{{ $index }}][bouID]" value="{{ $summary['bouID'] }}"> --}}
+                    <input type="hidden" name="summaries[{{ $index }}][month]" value="{{ $summary['month'] }}">
+                    <input type="hidden" name="summaries[{{ $index }}][year]" value="{{ $summary['year'] }}">
+                    <input type="hidden" name="summaries[{{ $index }}][basicpay0]" value="{{ $summary['basicpay0'] }}">
+                    <input type="hidden" name="summaries[{{ $index }}][basicpay1]" value="{{ $summary['basicpay1'] }}">
+                    <input type="hidden" name="summaries[{{ $index }}][totalBasicPay]" value="{{ $summary['totalBasicPay'] }}">
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -224,7 +234,7 @@
     initializeSelect2('#year');
     initializeSelect2('#months');
 
-    let manageLeavesTable = $('#manageBIR').DataTable({
+    let manageLeavesTable = $('#payrollCutoffSummary').DataTable({
         processing: true,
         responsive: true,
     });
@@ -241,5 +251,7 @@
     }
 
 });
+
+
         
 </script>

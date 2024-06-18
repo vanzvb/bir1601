@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pre_bir_1601s', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('empID'); // Employee ID
+            $table->string('empID'); // Employee ID
             // $table->integer('cutoff')->nullable(); //cutoff 0 = 1-15 / 1 = 16-30
             $table->string('tin')->nullable();
             $table->unsignedBigInteger('bouID')->nullable();

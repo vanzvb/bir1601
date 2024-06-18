@@ -29,7 +29,7 @@ class PayrollCutoffSummaryFactory extends Factory
         $year = 2024;
 
         // If the year is 2024, limit the months to May
-        $month = ($year == 2024) ? $this->faker->numberBetween(4, 4) : $this->faker->numberBetween(1, 12);
+        $month = ($year == 2024) ? $this->faker->numberBetween(3, 4) : $this->faker->numberBetween(1, 12);
 
         // Ensure each user has one cutoff value 1 and one cutoff value 2 per month
         $cutoff = $phRowId % 2 == 0 ? 0 : 1;

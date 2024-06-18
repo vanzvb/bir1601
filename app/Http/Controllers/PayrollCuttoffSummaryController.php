@@ -79,7 +79,8 @@ class PayrollCuttoffSummaryController extends Controller
                             'month' => $month,
                             'basicpay0' => null,
                             'basicpay1' => null,
-                            'user' => $summary->user, // Include user data
+                            'totalBasicPay' => null,
+                            'user' => $summary->user, // Include user data  
                             // Initialize other columns as needed
                         ];
                     }
@@ -91,6 +92,11 @@ class PayrollCuttoffSummaryController extends Controller
                         $monthly_data[$month]['basicpay1'] = $summary->basicpay;
                         // Add other columns as needed for cutoff 1
                     }
+
+
+                // Calculate totalBasicPay
+                $monthly_data[$month]['totalBasicPay'] =  $monthly_data[$month]['basicpay0'] + $monthly_data[$month]['basicpay1'];
+
                 }
         
                 foreach ($monthly_data as $data) {
@@ -101,6 +107,8 @@ class PayrollCuttoffSummaryController extends Controller
 
         // Convert $result to a collection
         $payroll_cuttoff_summaries = collect($result);
+
+        // dd($payroll_cuttoff_summaries);
 
         } else {
             $payroll_cuttoff_summaries = collect(); // Empty collection for the initial load
@@ -114,103 +122,50 @@ class PayrollCuttoffSummaryController extends Controller
     public function save(Request $request)
     {
 
-        $year = $request->input('year', '');
-        $month = $request->input('month', '');
+        // $year = $request->input('year', '');
+        // $month = $request->input('month', '');
+
+        // Dump all input data for debugging
+        $input = $request->all();
+        // dd($input);
+
+        $summaries = $request->input('summaries');
+        
+        // Check if summaries are null
+        if (is_null($summaries)) {
+            return redirect()->route('payroll_cutoff_summary.payroll_cutoff_summary')->with('error', 'No data to save.');
+        }
 
         try {         
             
             // Start a transaction
             DB::beginTransaction();
 
-            // $year = 2024; // Example year variable
-            // $month = 4;   // Example month variable
-        if ($year && $month) {
-
-            $payroll_cuttoff_summaries = PayrollCutoffSummary::select([
-                'empID',
-                'year',
-                'month',
-    
-                // BASIC PAY
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN BasicPay ELSE 0 END) AS BasicPay1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN BasicPay ELSE 0 END) AS BasicPay2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN BasicPay ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN BasicPay ELSE 0 END) AS TotalBasicPay'),
-    
-                // PREMIUM
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_premium ELSE 0 END) AS Premium1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_premium ELSE 0 END) AS Premium2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_premium ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_premium ELSE 0 END) AS TotalPremium'),
-    
-                // Deminimis
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_dmm ELSE 0 END) AS DMM1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_dmm ELSE 0 END) AS DMM2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_dmm ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_dmm ELSE 0 END) AS TotalDMM'),
-    
-                // Project Expense Reim
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) AS ProjExp1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS ProjExp2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS TotalProjExp'),
-    
-                // Deduction
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_d ELSE 0 END) AS Deduction1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_d ELSE 0 END) AS Deduction2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_d ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_d ELSE 0 END) AS TotalDeduction'),
-    
-                // Gross Pay Salary (sample total_e) but should be redo
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) AS GrossPaySal1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS GrossPaySal2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN total_e ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN total_e ELSE 0 END) AS TotalGrossPaySal'),
-    
-                // Taxable
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN tax ELSE 0 END) AS Tax1'),
-                DB::raw('MAX(CASE WHEN cutoff = 2 THEN tax ELSE 0 END) AS Tax2'),
-                DB::raw('MAX(CASE WHEN cutoff = 1 THEN tax ELSE 0 END) + MAX(CASE WHEN cutoff = 2 THEN tax ELSE 0 END) AS TotalTax'),
-            ])
-            ->where('year', $year)
-            ->where('month', $month)
-            ->groupBy('empID', 'year', 'month')
-            ->get();
-
-            
-
-            // Loop through each summary and save them one by one
-            foreach ($payroll_cuttoff_summaries as $summary) {
+            // Process each summary if not null
+            foreach ($summaries as $summary) {
+                // Process each summary
+                $empID = $summary['empID'];
+                // $bouName = $summary['bou_name'];
+                $month = $summary['month'];
+                $year = $summary['year'];
+                $basicpay0 = $summary['basicpay0'];
+                $basicpay1 = $summary['basicpay1'];
+                $totalBasicPay = $summary['totalBasicPay'];
+                
+                // Add your processing logic here
                 PreBir1601::create([
-                    'empID' => $summary->empID,
-                    'month' => $summary->month,
-                    'year' => $summary->year,
-                    'basic_pay_first' => Crypt::encryptString($summary->BasicPay1),
-                    'basic_pay_second' => Crypt::encryptString($summary->BasicPay2),
-                    'basic_pay_total' => Crypt::encryptString($summary->TotalBasicPay),
-                    'premium_first' => Crypt::encryptString($summary->Premium1),
-                    'premium_second' => Crypt::encryptString($summary->Premium1),
-                    'tot_premium' => Crypt::encryptString($summary->TotalPremium),
-                    'dmm_first' => Crypt::encryptString($summary->DMM1),
-                    'dmm_second' => Crypt::encryptString($summary->DMM2),
-                    'tot_dmm' => Crypt::encryptString($summary->TotalDMM),
-                    'proj_exp_first' => Crypt::encryptString($summary->ProjExp1),
-                    'proj_exp_second' => Crypt::encryptString($summary->ProjExp2),
-                    'tot_proj_exp' => Crypt::encryptString($summary->TotalProjExp),
-                    'deduction_first' => Crypt::encryptString($summary->Deduction1),
-                    'deduction_second' => Crypt::encryptString($summary->Deduction2),
-                    'tot_deduction' => Crypt::encryptString($summary->TotalDeduction),
-                    'gross_pay_first' => Crypt::encryptString($summary->GrossPaySal1),
-                    'gross_pay_second' => Crypt::encryptString($summary->GrossPaySal2),
-                    'tot_gross_pay_salary' => Crypt::encryptString($summary->TotalGrossPaySal),
-                    'tax_first' => Crypt::encryptString($summary->Tax1),
-                    'tax_second' => Crypt::encryptString($summary->Tax2),
-                    'tot_tax' => Crypt::encryptString($summary->TotalTax)
+                    'empID' => $empID,
+                    'month' => $month,
+                    'year' => $year,
+                    'basic_pay_first' => Crypt::encryptString($basicpay0),
+                    'basic_pay_second' => Crypt::encryptString($basicpay1),
+                    'basic_pay_total' => Crypt::encryptString($totalBasicPay)
                 ]);
             }
 
+
             // Commit the transaction
             DB::commit();
-        } else {
-            $payroll_cuttoff_summaries = collect(); // Empty collection for the initial load
-        }
-
-            // encryption syntax 
-            // 'tax' => Crypt::encryptString($summary->tax),
 
             return redirect()->route('payroll_cutoff_summary.payroll_cutoff_summary')->with('success', 'Payroll transfered successfully.');
         } catch (Exception $e) {
