@@ -112,6 +112,7 @@
                                 <form method="post" action="{{ route('save.payroll') }}">
                                     @csrf
                                     <div class="table-responsive" style="width:100%">
+                                        <button type="submit" class="btn btn-success">Sync Data</button>
                                         @if($payroll_cuttoff_summaries->isEmpty())
                                             <p>No data available.</p>
                                         @else
@@ -125,14 +126,14 @@
                                                     <th>Basic Pay(1-15)</th>
                                                     <th>Basic Pay(16-31)</th>
                                                     <th>Total Basic Pay</th>
-                                                    {{-- 
+                                                    
                                                     <th>Premium (1-15)</th>
                                                     <th>Premium (16-31)</th>
                                                     <th>Total Premium</th>
                                                     <th>DMM(1-15)</th>
                                                     <th>DMM(16-31)</th>
                                                     <th>Total DMM</th>
-                                                    <th>Proj Exp(1-15)</th>
+                                                    {{-- <th>Proj Exp(1-15)</th>
                                                     <th>Proj Exp(16-31)</th>
                                                     <th>Total Proj Exp Reim</th>
                                                     <th>Deduction(1-15)</th>
@@ -160,21 +161,36 @@
                                                         <td>{{ $summary['basicpay0'] }}</td>
                                                         <td>{{ $summary['basicpay1'] }}</td>
                                                         <td>{{ $summary['totalBasicPay'] }}</td>
+                                                        <td>{{ $summary['premium0'] }}</td>
+                                                        <td>{{ $summary['premium1'] }}</td>
+                                                        <td>{{ $summary['totalPremium'] }}</td>
+                                                        <td>{{ $summary['dmm0'] }}</td>
+                                                        <td>{{ $summary['dmm1'] }}</td>
+                                                        <td>{{ $summary['totalDmm'] }}</td>
+
                                                         <!-- Add other columns as needed -->
-                    <!-- Hidden inputs for each summary item -->
-                    <input type="hidden" name="summaries[{{ $index }}][empID]" value="{{ $summary['empID'] }}">
-                    {{-- <input type="hidden" name="summaries[{{ $index }}][bouID]" value="{{ $summary['bouID'] }}"> --}}
-                    <input type="hidden" name="summaries[{{ $index }}][month]" value="{{ $summary['month'] }}">
-                    <input type="hidden" name="summaries[{{ $index }}][year]" value="{{ $summary['year'] }}">
-                    <input type="hidden" name="summaries[{{ $index }}][basicpay0]" value="{{ $summary['basicpay0'] }}">
-                    <input type="hidden" name="summaries[{{ $index }}][basicpay1]" value="{{ $summary['basicpay1'] }}">
-                    <input type="hidden" name="summaries[{{ $index }}][totalBasicPay]" value="{{ $summary['totalBasicPay'] }}">
+
+
+                                                        <!-- Hidden inputs for each summary item -->
+                                                        <input type="hidden" name="summaries[{{ $index }}][empID]" value="{{ $summary['empID'] }}">
+                                                        {{-- <input type="hidden" name="summaries[{{ $index }}][bouID]" value="{{ $summary['bouID'] }}"> --}}
+                                                        <input type="hidden" name="summaries[{{ $index }}][month]" value="{{ $summary['month'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][year]" value="{{ $summary['year'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][basicpay0]" value="{{ $summary['basicpay0'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][basicpay1]" value="{{ $summary['basicpay1'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][totalBasicPay]" value="{{ $summary['totalBasicPay'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][premium0]" value="{{ $summary['premium0'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][premium1]" value="{{ $summary['premium1'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][totalPremium]" value="{{ $summary['totalPremium'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][dmm0]" value="{{ $summary['dmm0'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][dmm1]" value="{{ $summary['dmm1'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][totalDmm]" value="{{ $summary['totalDmm'] }}">
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
                                         @endif
-                                        <button type="submit" class="btn btn-success">Sync Data</button>
+                                        {{-- <button type="submit" class="btn btn-success">Sync Data</button> --}}
                                     </div>
                                 </form>
                             </div>

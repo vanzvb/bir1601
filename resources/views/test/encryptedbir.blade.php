@@ -95,21 +95,20 @@
                                 <tr>
                                     <td><button type="button" class="toggle-details"><i
                                                 class="fa fa-caret-down"></i></button></td>
-                                    <td>{{ $pre_bir_1601->tin }}</td>
+                                    <td>{{ $pre_bir_1601->user->tin }}</td>
                                     <td>{{ $pre_bir_1601->empID }}</td>
                                     <td>{{ $pre_bir_1601->user->name }}</td>
-                                    {{-- <td>{{ $pre_bir_1601->companyBou->bouName }}</td> --}}
-                                    <td>Sample BOU</td>
+                                    <td>{{ $pre_bir_1601->user->companyBOU->bouName }}</td>
                                     <td>{{ $pre_bir_1601->basic_pay_first }}</td>
                                     <td>{{ $pre_bir_1601->basic_pay_second }}</td>
                                     <td>{{ $pre_bir_1601->basic_pay_total }}</td>
-                                    {{-- <td>{{ Crypt::decryptString($pre_bir_1601->premium_first) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->premium_second) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_premium) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->dmm_first) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->dmm_second) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_dmm) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_first) }}</td>
+                                    <td>{{ $pre_bir_1601->premium_first }}</td>
+                                    <td>{{ $pre_bir_1601->premium_second }}</td>
+                                    <td>{{ $pre_bir_1601->tot_premium }}</td>
+                                    <td>{{ $pre_bir_1601->dmm_first }}</td>
+                                    <td>{{ $pre_bir_1601->dmm_second }}</td>
+                                    <td>{{ $pre_bir_1601->tot_dmm }}</td>
+                                    {{-- <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_first) }}</td>
                                     <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_second) }}</td>
                                     <td>{{ Crypt::decryptString($pre_bir_1601->tot_proj_exp) }}</td>
                                     <td>{{ Crypt::decryptString($pre_bir_1601->deduction_first) }}</td>

@@ -108,8 +108,13 @@ class ReportController extends Controller
         $decrypted_summaries = $pre_bir_1601s->map(function ($summary) {
             $summary->basic_pay_first = Crypt::decrypt($summary->basic_pay_first);
             $summary->basic_pay_second = Crypt::decrypt($summary->basic_pay_second);
-            $summary->basic_pay_total = $summary->basic_pay_first + $summary->basic_pay_second;
-            // $summary->total_dmm = Crypt::decrypt($summary->total_dmm);
+            $summary->basic_pay_total = Crypt::decrypt($summary->basic_pay_total);
+            $summary->premium_first = Crypt::decrypt($summary->premium_first);
+            $summary->premium_second = Crypt::decrypt($summary->premium_second);
+            $summary->tot_premium = Crypt::decrypt($summary->tot_premium);
+            $summary->dmm_first = Crypt::decrypt($summary->dmm_first);
+            $summary->dmm_second = Crypt::decrypt($summary->dmm_second);
+            $summary->tot_dmm = Crypt::decrypt($summary->tot_dmm);
             // $summary->total_e = Crypt::decrypt($summary->total_e);
             // $summary->total_d = Crypt::decrypt($summary->total_d);
             // $summary->total_premium = Crypt::decrypt($summary->total_premium);

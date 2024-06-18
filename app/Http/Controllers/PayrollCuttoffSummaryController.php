@@ -80,6 +80,12 @@ class PayrollCuttoffSummaryController extends Controller
                             'basicpay0' => null,
                             'basicpay1' => null,
                             'totalBasicPay' => null,
+                            'premium0' => null,
+                            'premium1' => null,
+                            'totalPremium' => null,
+                            'dmm0' => null,
+                            'dmm1' => null,
+                            'totalDmm' => null,
                             'user' => $summary->user, // Include user data  
                             // Initialize other columns as needed
                         ];
@@ -87,16 +93,23 @@ class PayrollCuttoffSummaryController extends Controller
         
                     if ($cutoff == 0) {
                         $monthly_data[$month]['basicpay0'] = $summary->basicpay;
+                        $monthly_data[$month]['premium0'] = $summary->total_premium;
+                        $monthly_data[$month]['dmm0'] = $summary->total_dmm;
                         // Add other columns as needed for cutoff 0
                     } elseif ($cutoff == 1) {
                         $monthly_data[$month]['basicpay1'] = $summary->basicpay;
+                        $monthly_data[$month]['premium1'] = $summary->total_premium;
+                        $monthly_data[$month]['dmm1'] = $summary->total_dmm;
                         // Add other columns as needed for cutoff 1
                     }
 
 
-                // Calculate totalBasicPay
+                // Calculate all total
                 $monthly_data[$month]['totalBasicPay'] =  $monthly_data[$month]['basicpay0'] + $monthly_data[$month]['basicpay1'];
 
+                $monthly_data[$month]['totalPremium'] =  $monthly_data[$month]['premium0'] + $monthly_data[$month]['premium1'];
+
+                $monthly_data[$month]['totalDmm'] =  $monthly_data[$month]['dmm0'] + $monthly_data[$month]['dmm1'];
                 }
         
                 foreach ($monthly_data as $data) {
@@ -151,6 +164,12 @@ class PayrollCuttoffSummaryController extends Controller
                 $basicpay0 = $summary['basicpay0'];
                 $basicpay1 = $summary['basicpay1'];
                 $totalBasicPay = $summary['totalBasicPay'];
+                $premium0 = $summary['premium0'];
+                $premium1 = $summary['premium1'];
+                $totalPremium = $summary['totalPremium'];
+                $dmm0 = $summary['dmm0'];
+                $dmm1 = $summary['dmm1'];
+                $totalDmm = $summary['totalDmm'];
                 
                 // Add your processing logic here
                 PreBir1601::create([
@@ -159,7 +178,13 @@ class PayrollCuttoffSummaryController extends Controller
                     'year' => $year,
                     'basic_pay_first' => Crypt::encrypt($basicpay0),
                     'basic_pay_second' => Crypt::encrypt($basicpay1),
-                    'basic_pay_total' => Crypt::encrypt($totalBasicPay)
+                    'basic_pay_total' => Crypt::encrypt($totalBasicPay),
+                    'premium_first' => Crypt::encrypt($premium0),
+                    'premium_second' => Crypt::encrypt($premium1),
+                    'tot_premium' => Crypt::encrypt($totalPremium),
+                    'dmm_first' => Crypt::encrypt($dmm0),
+                    'dmm_second' => Crypt::encrypt($dmm1),
+                    'tot_dmm' => Crypt::encrypt($totalDmm)
                 ]);
             }
 
