@@ -46,7 +46,16 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div><strong>Parameter {{ $month }}, {{ $year }}</strong></div>
+                        <div><strong>Filter: 
+                            @if(!empty($months))
+                                @foreach($months as $month)
+                                    {{ \DateTime::createFromFormat('!m', $month)->format('F') }}{{ $loop->last ? '' : ', ' }}
+                                @endforeach
+                            @else
+                                All Months
+                            @endif
+                            , {{ $year }}
+                        </strong></div>
                         <div>
                             <button id="exportXls" class="btn btn-primary me-2">Export to Excel</button>
                             <form action="{{ route('clear.pre_bir_1601s') }}" method="POST" class="d-inline">

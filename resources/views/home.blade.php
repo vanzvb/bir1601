@@ -51,7 +51,7 @@
                                         <tr>
                                             <td>BIR 1601</td>
                                             <td>
-                                                <select id="month" name="month" class="form-select select2" required>
+                                                <select id="month" name="month[]" class="form-select select2" multiple>
                                                     <option value="">Select Month</option>
                                                     @for ($m = 1; $m <= 12; $m++)
                                                         <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>

@@ -88,21 +88,22 @@ class ReportController extends Controller
 
     public function preBir1601(Request $request)
     {
-        $month = $request->input('month');
+        $months = $request->input('month', []);  // Handle multiple months, default to empty array
         $year = $request->input('year');
         $bouID = $request->input('bouID', []);
-
-        $pre_bir_1601s = PreBir1601::all();
-
-        // Filter records based on month, year, and bouID
-        // $query = PreBir1601::where('month', $month)
-        //                     ->where('year', $year);
-
-        // if (!empty($bouIDs)) {
-        //     $query->whereIn('bouID', $bouIDs);
-        // }
-
-        // $pre_bir_1601s = $query->get();
+    
+        // Base query with required year
+        $pre_bir_1601s = PreBir1601::where('year', $year)
+            ->whereHas('user', function($query) use ($bouID) {
+                $query->whereIn('bouID', $bouID);
+            });
+    
+        // If months are provided, add the month filter
+        if (!empty($months)) {
+            $pre_bir_1601s->whereIn('month', $months);
+        }
+    
+        $pre_bir_1601s = $pre_bir_1601s->get();
 
         // Decrypting encrypted columns
         $decrypted_summaries = $pre_bir_1601s->map(function ($summary) {
@@ -133,7 +134,7 @@ class ReportController extends Controller
             $total_project_exp += intval($pre_bir_1601->tot_proj_exp);
         }
         
-        return view('test.encryptedbir', compact('pre_bir_1601s','month', 'year','bouID', 'total_basic_pay', 'total_dmm', 'total_project_exp'));
+        return view('test.encryptedbir', compact('pre_bir_1601s','months', 'year','bouID', 'total_basic_pay', 'total_dmm', 'total_project_exp'));
     }
 
     public function clear()

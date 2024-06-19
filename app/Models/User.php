@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(CompanyBOU::class, 'bouID', 'bouID');
     }
+
+    public function preBir1601s()
+    {
+        return $this->hasMany(PreBir1601::class, 'empID', 'id');
+    }
 }
