@@ -133,22 +133,19 @@
                                                     <th>DMM(1-15)</th>
                                                     <th>DMM(16-31)</th>
                                                     <th>Total DMM</th>
-                                                    {{-- <th>Proj Exp(1-15)</th>
+                                                    <th>Proj Exp(1-15)</th>
                                                     <th>Proj Exp(16-31)</th>
                                                     <th>Total Proj Exp Reim</th>
                                                     <th>Deduction(1-15)</th>
                                                     <th>Deduction(16-31)</th>
                                                     <th>Total Deduction</th>
+                                                    {{-- Current Gross --}}
                                                     <th>Gross Pay Salary(1-15)</th>
                                                     <th>Gross Pay Salary(16-31)</th>
                                                     <th>Total Gross Pay Salary</th>
                                                     <th>Tax(1-15)</th>
                                                     <th>Tax(16-31)</th>
-                                                    <th>Total Tax</th> --}}
-                                                    {{-- <th>Total Project Exp</th>
-                                                    <th>Total Deduction</th>
-                                                    <th>Total Gross Pay Salary</th>
-                                                    <th>Tax</th> --}}
+                                                    <th>Total Tax</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -167,7 +164,19 @@
                                                         <td>{{ $summary['dmm0'] }}</td>
                                                         <td>{{ $summary['dmm1'] }}</td>
                                                         <td>{{ $summary['totalDmm'] }}</td>
-
+                                                        <td>{{ $summary['projectexp0'] }}</td>
+                                                        <td>{{ $summary['projectexp1'] }}</td>
+                                                        <td>{{ $summary['totalProjectExp'] }}</td>
+                                                        <td>{{ $summary['deduction0'] }}</td>
+                                                        <td>{{ $summary['deduction1'] }}</td>
+                                                        <td>{{ $summary['totalDeduction'] }}</td>
+                                                        {{-- this should be gross computation --}}
+                                                        <td>{{ $summary['premium0'] }}</td>
+                                                        <td>{{ $summary['premium1'] }}</td>
+                                                        <td>{{ $summary['totalPremium'] }}</td>
+                                                        <td>{{ $summary['tax0'] }}</td>
+                                                        <td>{{ $summary['tax1'] }}</td>
+                                                        <td>{{ $summary['totalTax'] }}</td>
                                                         <!-- Add other columns as needed -->
 
 
@@ -185,6 +194,19 @@
                                                         <input type="hidden" name="summaries[{{ $index }}][dmm0]" value="{{ $summary['dmm0'] }}">
                                                         <input type="hidden" name="summaries[{{ $index }}][dmm1]" value="{{ $summary['dmm1'] }}">
                                                         <input type="hidden" name="summaries[{{ $index }}][totalDmm]" value="{{ $summary['totalDmm'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][projectexp0]" value="{{ $summary['projectexp0'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][projectexp1]" value="{{ $summary['projectexp1'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][totalProjectExp]" value="{{ $summary['totalProjectExp'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][deduction0]" value="{{ $summary['deduction0'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][deduction1]" value="{{ $summary['deduction1'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][totalDeduction]" value="{{ $summary['totalDeduction'] }}">
+                                                        {{-- this should be gross computation --}}
+                                                        <input type="hidden" name="summaries[{{ $index }}][premium0]" value="{{ $summary['premium0'] }}"> 
+                                                        <input type="hidden" name="summaries[{{ $index }}][premium1]" value="{{ $summary['premium1'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][totalPremium]" value="{{ $summary['totalPremium'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][tax0]" value="{{ $summary['tax0'] }}"> 
+                                                        <input type="hidden" name="summaries[{{ $index }}][tax1]" value="{{ $summary['tax1'] }}">
+                                                        <input type="hidden" name="summaries[{{ $index }}][totalTax]" value="{{ $summary['totalTax'] }}">
                                                     </tr>
                                                 @endforeach
                                             </tbody>

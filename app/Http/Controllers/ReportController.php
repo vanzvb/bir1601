@@ -116,11 +116,18 @@ class ReportController extends Controller
             $summary->dmm_first = Crypt::decrypt($summary->dmm_first);
             $summary->dmm_second = Crypt::decrypt($summary->dmm_second);
             $summary->tot_dmm = Crypt::decrypt($summary->tot_dmm);
-            // $summary->total_e = Crypt::decrypt($summary->total_e);
-            // $summary->total_d = Crypt::decrypt($summary->total_d);
-            // $summary->total_premium = Crypt::decrypt($summary->total_premium);
-            // $summary->tax = Crypt::decrypt($summary->tax);
-            // dd($summary);
+            $summary->proj_exp_first = Crypt::decrypt($summary->proj_exp_first);
+            $summary->proj_exp_second = Crypt::decrypt($summary->proj_exp_second);
+            $summary->tot_proj_exp = Crypt::decrypt($summary->tot_proj_exp);
+            $summary->deduction_first = Crypt::decrypt($summary->deduction_first);
+            $summary->deduction_second = Crypt::decrypt($summary->deduction_second);
+            $summary->tot_deduction = Crypt::decrypt($summary->tot_deduction);
+            $summary->gross_pay_first = Crypt::decrypt($summary->gross_pay_first);
+            $summary->gross_pay_second = Crypt::decrypt($summary->gross_pay_second);
+            $summary->tot_gross_pay_salary = Crypt::decrypt($summary->tot_gross_pay_salary);
+            $summary->tax_first = Crypt::decrypt($summary->tax_first);
+            $summary->tax_second = Crypt::decrypt($summary->tax_second);
+            $summary->tot_tax = Crypt::decrypt($summary->tot_tax);
             return $summary;
         });
 

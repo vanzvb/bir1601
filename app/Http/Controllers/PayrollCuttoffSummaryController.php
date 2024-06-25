@@ -88,6 +88,20 @@ class PayrollCuttoffSummaryController extends Controller
                             'dmm0' => null,
                             'dmm1' => null,
                             'totalDmm' => null,
+                            'projectexp0' => null,
+                            'projectexp1' => null,
+                            'totalProjectExp' => null,
+                            'deduction0' => null,
+                            'deduction1' => null,
+                            'totalDeduction' => null,
+                            //should be gross
+                            'premium0' => null,
+                            'premium1' => null,
+                            'totalPremium' => null,
+
+                            'tax0' => null,
+                            'tax1' => null,
+                            'totalTax' => null,
                             'user' => $summary->user, // Include user data  
                             // Initialize other columns as needed
                         ];
@@ -97,11 +111,23 @@ class PayrollCuttoffSummaryController extends Controller
                         $monthly_data[$month]['basicpay0'] =  $summary->basicpay;
                         $monthly_data[$month]['premium0'] =  $summary->total_premium;
                         $monthly_data[$month]['dmm0'] =  $summary->total_dmm;
+                        $monthly_data[$month]['projectexp0'] =  $summary->total_e;
+                        $monthly_data[$month]['deduction0'] =  $summary->total_d;
+                        // should be gross
+                        $monthly_data[$month]['premium0'] =  $summary->total_premium;
+                        $monthly_data[$month]['tax0'] =  $summary->tax;
+
                         // Add other columns as needed for cutoff 0
                     } elseif ($cutoff == 1) {
                         $monthly_data[$month]['basicpay1'] =  $summary->basicpay;
                         $monthly_data[$month]['premium1'] =  $summary->total_premium;
                         $monthly_data[$month]['dmm1'] =  $summary->total_dmm;
+                        $monthly_data[$month]['projectexp1'] =  $summary->total_e;
+                        $monthly_data[$month]['deduction1'] =  $summary->total_d;
+                        // should be gross
+                        $monthly_data[$month]['premium1'] =  $summary->total_premium;
+                        $monthly_data[$month]['tax1'] =  $summary->tax;
+
                         // Add other columns as needed for cutoff 1
                     }
 
@@ -123,6 +149,30 @@ class PayrollCuttoffSummaryController extends Controller
                     $monthly_data[$month]['totalDmm'] = number_format(
                         floatval(str_replace(',', '', $monthly_data[$month]['dmm0'])) + 
                         floatval(str_replace(',', '', $monthly_data[$month]['dmm1'])),
+                        2
+                    );
+
+                    $monthly_data[$month]['totalProjectExp'] = number_format(
+                        floatval(str_replace(',', '', $monthly_data[$month]['projectexp0'])) + 
+                        floatval(str_replace(',', '', $monthly_data[$month]['projectexp1'])),
+                        2
+                    );
+
+                    $monthly_data[$month]['totalDeduction'] = number_format(
+                        floatval(str_replace(',', '', $monthly_data[$month]['deduction0'])) + 
+                        floatval(str_replace(',', '', $monthly_data[$month]['deduction1'])),
+                        2
+                    );
+                    // Should be gross
+                    $monthly_data[$month]['totalPremium'] = number_format(
+                        floatval(str_replace(',', '', $monthly_data[$month]['premium0'])) + 
+                        floatval(str_replace(',', '', $monthly_data[$month]['premium1'])),
+                        2
+                    );
+
+                    $monthly_data[$month]['totalTax'] = number_format(
+                        floatval(str_replace(',', '', $monthly_data[$month]['tax0'])) + 
+                        floatval(str_replace(',', '', $monthly_data[$month]['tax1'])),
                         2
                     );
 
@@ -186,6 +236,20 @@ class PayrollCuttoffSummaryController extends Controller
                 $dmm0 = $summary['dmm0'];
                 $dmm1 = $summary['dmm1'];
                 $totalDmm = $summary['totalDmm'];
+                $projectexp0 = $summary['projectexp0'];
+                $projectexp1 = $summary['projectexp1'];
+                $totalProjectExp = $summary['totalProjectExp'];
+                $deduction0 = $summary['deduction0'];
+                $deduction1 = $summary['deduction1'];
+                $totalDeduction = $summary['totalDeduction'];
+                // Should be gross pay computation
+                $premium0 = $summary['premium0'];
+                $premium1 = $summary['premium1'];
+                $totalPremium = $summary['totalPremium'];
+
+                $tax0 = $summary['tax0'];
+                $tax1 = $summary['tax1'];
+                $totalTax = $summary['totalTax'];
                 
                 // Add your processing logic here
                 PreBir1601::create([
@@ -200,7 +264,21 @@ class PayrollCuttoffSummaryController extends Controller
                     'tot_premium' => Crypt::encrypt($totalPremium),
                     'dmm_first' => Crypt::encrypt($dmm0),
                     'dmm_second' => Crypt::encrypt($dmm1),
-                    'tot_dmm' => Crypt::encrypt($totalDmm)
+                    'tot_dmm' => Crypt::encrypt($totalDmm),
+                    'proj_exp_first' => Crypt::encrypt($projectexp0),
+                    'proj_exp_second' => Crypt::encrypt($projectexp1),
+                    'tot_proj_exp' => Crypt::encrypt($totalProjectExp),
+                    'deduction_first' => Crypt::encrypt($deduction0),
+                    'deduction_second' => Crypt::encrypt($deduction1),
+                    'tot_deduction' => Crypt::encrypt($totalDeduction),
+                    // Should be gross pay computation
+                    'gross_pay_first' => Crypt::encrypt($premium0),
+                    'gross_pay_second' => Crypt::encrypt($premium1),
+                    'tot_gross_pay_salary' => Crypt::encrypt($totalPremium),
+
+                    'tax_first' => Crypt::encrypt($tax0),
+                    'tax_second' => Crypt::encrypt($tax1),
+                    'tot_tax' => Crypt::encrypt($totalTax),
                 ]);
             }
 

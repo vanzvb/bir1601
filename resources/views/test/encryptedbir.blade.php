@@ -117,18 +117,18 @@
                                     <td>{{ $pre_bir_1601->dmm_first }}</td>
                                     <td>{{ $pre_bir_1601->dmm_second }}</td>
                                     <td>{{ $pre_bir_1601->tot_dmm }}</td>
-                                    {{-- <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_first) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->proj_exp_second) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_proj_exp) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->deduction_first) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->deduction_second) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_deduction) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->gross_pay_first) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->gross_pay_second) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_gross_pay_salary) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->tax_first) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->tax_second) }}</td>
-                                    <td>{{ Crypt::decryptString($pre_bir_1601->tot_tax) }}</td> --}}
+                                    <td>{{ $pre_bir_1601->proj_exp_first }}</td>
+                                    <td>{{ $pre_bir_1601->proj_exp_second }}</td>
+                                    <td>{{ $pre_bir_1601->tot_proj_exp }}</td>
+                                    <td>{{ $pre_bir_1601->deduction_first }}</td>
+                                    <td>{{ $pre_bir_1601->deduction_second }}</td>
+                                    <td>{{ $pre_bir_1601->tot_deduction }}</td>
+                                    <td>{{ $pre_bir_1601->gross_pay_first }}</td>
+                                    <td>{{ $pre_bir_1601->gross_pay_second }}</td>
+                                    <td>{{ $pre_bir_1601->tot_gross_pay_salary }}</td>
+                                    <td>{{ $pre_bir_1601->tax_first }}</td>
+                                    <td>{{ $pre_bir_1601->tax_second }}</td>
+                                    <td>{{ $pre_bir_1601->tot_tax }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
